@@ -1,7 +1,10 @@
+import * as THREE from "three";
+import { defineStore } from "pinia";
+
 export const useImageStore = defineStore("imageStore", {
   state: () => ({
-    images: [],
-    loadedImages: [],
+    images: [], // Original URLs
+    loadedImages: [], // Stores THREE.Textures
     isLoading: false,
     isLoaded: false,
     totalImages: 1001,
@@ -16,13 +19,19 @@ export const useImageStore = defineStore("imageStore", {
     },
     preloadImage(url) {
       return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => {
-          this.loadedImages.push(img);
-          resolve();
-        };
-        img.onerror = reject;
+        const loader = new THREE.TextureLoader();
+        loader.load(
+          url,
+          (texture) => {
+            this.loadedImages.push(texture); // Store the THREE.Texture
+            resolve();
+          },
+          undefined,
+          (error) => {
+            console.error("Failed to load image:", url, error);
+            reject(error);
+          }
+        );
       });
     },
   },
