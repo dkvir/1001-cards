@@ -210,22 +210,36 @@ export const useCardsGallery = class App {
   // }
 
   createInstancedMesh() {
+    // Create a group to hold all particle meshes
+    const particleGroup = new THREE.Group();
+
     this.particles.forEach((p, idx) => {
-      // const texture = this.imageStore.loadedImages[idx]; // Access the preloaded texture
-      const texture = new THREE.TextureLoader().load(`/images/${idx + 1}.png`);
+      const texture = new THREE.TextureLoader().load(
+        `https://d3l19dpo35tmza.cloudfront.net/${idx + 1}.png`
+      );
 
       const material = new THREE.MeshBasicMaterial({
         map: texture,
       });
 
-      const geometry = new THREE.PlaneGeometry(0.09, 0.2);
+      const geometry = new THREE.PlaneGeometry(0.15, 0.2);
       const mesh = new THREE.Mesh(geometry, material);
 
-      mesh.position.set(p.x, this.stringBox.hScene - p.y, p.z);
-      this.scene.add(mesh);
+      // Position relative to the group
+      mesh.position.set(p.x, -p.y, p.z);
 
-      p.mesh = mesh; // Optional: Store reference for later updates
+      particleGroup.add(mesh);
+      p.mesh = mesh;
     });
+
+    // Center the entire group
+    particleGroup.position.set(
+      -this.stringBox.wScene / 2,
+      -this.stringBox.hScene / 2,
+      0
+    );
+
+    this.scene.add(particleGroup);
   }
 
   // updateParticlesMatrices() {
