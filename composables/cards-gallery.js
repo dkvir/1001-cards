@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { MapControls } from "three/addons/controls/MapControls.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { DoubleSide, EquirectangularRefractionMapping } from "three";
@@ -57,16 +58,25 @@ export const useCardsGallery = class App {
 
     this.scene = new THREE.Scene();
 
+    // this.camera = new THREE.PerspectiveCamera(
+    //   45,
+    //   window.innerWidth / window.innerHeight,
+    //   0.1,
+    //   1000
+    // );
     this.camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      10000
     );
 
-    this.camera.position.set(0, 0, 20);
+    this.camera.position.set(0, 0, 1);
 
-    this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
+    this.orbit = new MapControls(this.camera, this.renderer.domElement);
+    this.orbit.enableDamping = true;
+
+    // this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.textCanvas = document.createElement("canvas");
     this.textCanvas.width = this.textCanvas.height = 0;
@@ -98,10 +108,6 @@ export const useCardsGallery = class App {
     this.scene.add(shadowPlaneMesh);
 
     this.dummy = new THREE.Object3D();
-
-    // this.renderer.outputEncoding = THREE.sRGBEncoding;
-    // this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    // this.renderer.toneMappingExposure = 0.9;
 
     this.textInputEl.innerHTML = this.string;
     this.handleInput();
