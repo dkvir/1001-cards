@@ -13,8 +13,9 @@ const horizontalScroll = ref(null);
 // watch(
 //   () => imageStore.isLoaded,
 //   (curr) => {
-//     console.log(imageStore.loadedImages[0]);
-
+//     horizontalScroll.value = new useCardsGallery({
+//       canvas: document.querySelector(".canvas"),
+//     });
 //   }
 // );
 
@@ -22,8 +23,7 @@ onMounted(() => {
   // const imageUrls = [];
 
   // for (let i = 0; i < imageStore.totalImages; i++) {
-  //   // imageUrls.push(`https://d3l19dpo35tmza.cloudfront.net/${i + 1}.png`);
-  //   imageUrls.push(`/images/${i + 1}.png`);
+  //   imageUrls.push(`https://d3l19dpo35tmza.cloudfront.net/${i + 1}.png`);
   // }
 
   // imageStore.preloadImages(imageUrls);
@@ -49,6 +49,7 @@ onMounted(() => {
     left: 0;
     opacity: 0;
     pointer-events: none;
+    font-family: var(--font-evexweb-regular);
   }
 }
 </style>
