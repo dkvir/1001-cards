@@ -4,7 +4,6 @@ export const useTextureStore = defineStore("useTextureStore", {
   }),
   actions: {
     changeTextureIndex(index) {
-      console.log(index);
       this.textureIndex = index;
     },
   },

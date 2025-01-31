@@ -36,7 +36,7 @@ export const useCardsGallery = class App {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(1, 1);
 
-    this.uvs = useUvCoordinates().uvs1;
+    this.uvs = useUvCoordinates();
 
     this.createScene();
     this.addEventListeners();
@@ -341,13 +341,14 @@ export const useCardsGallery = class App {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     });
-    document.addEventListener("mousedown", (event) => {
+    this.options.canvas.addEventListener("click", (event) => {
       if (this.textureStore.textureIndex !== null) return;
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersections = this.raycaster.intersectObject(this.instancedMesh);
 
       if (intersections.length > 0) {
+        console.log(intersections.length);
         const instanceId = intersections[0].instanceId;
         this.textureStore.changeTextureIndex(instanceId);
       }

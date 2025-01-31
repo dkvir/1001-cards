@@ -22,8 +22,6 @@ watch(
   () => textureStore.textureIndex,
   (curr) => {
     imageLink.value = `/images/textures/artboard-0${(curr % 4) + 1}.png`;
-
-    console.log((curr % 4) + 1);
   }
 );
 
