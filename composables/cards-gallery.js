@@ -68,7 +68,7 @@ export const useCardsGallery = class App {
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      50000
+      100000
     );
 
     this.camera.position.set(0, 0, 1);
@@ -355,7 +355,7 @@ export const useCardsGallery = class App {
       }
     });
     this.orbit.addEventListener("change", () => {
-      if (this.camera.position.z > 10) return;
+      if (this.camera.position.z > 14.5) return;
 
       const currentZ = this.camera.position.z;
 
@@ -367,11 +367,11 @@ export const useCardsGallery = class App {
         const p = this.particles[i];
 
         if (isZoomingIn) {
-          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.01);
-          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.01);
+          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.08);
+          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.08);
         } else if (isZoomingOut) {
-          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.01);
-          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.01);
+          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.08);
+          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.08);
         }
 
         // Update the instance matrix
