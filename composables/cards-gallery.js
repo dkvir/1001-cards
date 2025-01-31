@@ -35,6 +35,7 @@ export const useCardsGallery = class App {
     this.instancedMesh = null;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(1, 1);
+    this.prevCameraZ = null;
 
     this.uvs = useUvCoordinates();
 
@@ -71,13 +72,14 @@ export const useCardsGallery = class App {
     );
 
     this.camera.position.set(0, 0, 1);
+    this.prevCameraZ = this.camera.position.z;
 
     this.orbit = new MapControls(this.camera, this.renderer.domElement);
     this.orbit.enableDamping = true;
     this.orbit.dampingFactor = 0.05;
     this.orbit.screenSpacePanning = true;
     this.orbit.minDistance = 0.6;
-    this.orbit.maxDistance = 20;
+    this.orbit.maxDistance = 15;
     this.orbit.maxPolarAngle = Math.PI / 2;
 
     // this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
@@ -348,10 +350,40 @@ export const useCardsGallery = class App {
       const intersections = this.raycaster.intersectObject(this.instancedMesh);
 
       if (intersections.length > 0) {
-        console.log(intersections.length);
         const instanceId = intersections[0].instanceId;
         this.textureStore.changeTextureIndex(instanceId);
       }
+    });
+    this.orbit.addEventListener("change", () => {
+      if (this.camera.position.z > 10) return;
+
+      const currentZ = this.camera.position.z;
+
+      // Determine if camera is zooming in or out
+      const isZoomingIn = currentZ < this.prevCameraZ; // Zooming in (decreasing Z)
+      const isZoomingOut = currentZ > this.prevCameraZ; // Zooming out (increasing Z)
+
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+
+        if (isZoomingIn) {
+          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.1);
+          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.1);
+        } else if (isZoomingOut) {
+          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.1);
+          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.1);
+        }
+
+        // Update the instance matrix
+        this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
+        this.dummy.updateMatrix();
+        this.instancedMesh.setMatrixAt(i, this.dummy.matrix);
+      }
+
+      this.instancedMesh.instanceMatrix.needsUpdate = true;
+
+      // Store current Z for next frame comparison
+      this.prevCameraZ = currentZ;
     });
   }
 };
