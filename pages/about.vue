@@ -2,6 +2,7 @@
   <div class="about-page">
     <canvas class="canvas"></canvas>
     <div id="text-input" contenteditable="true" autofocus></div>
+    <pages-open-texture />
   </div>
 </template>
 

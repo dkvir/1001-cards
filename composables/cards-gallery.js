@@ -4,12 +4,12 @@ import { MapControls } from "three/addons/controls/MapControls.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { DoubleSide, EquirectangularRefractionMapping } from "three";
-import { useImageStore } from "@/store/imagesLoaded";
+import { useTextureStore } from "@/store/texture";
 
 export const useCardsGallery = class App {
   constructor(options) {
     this.options = options;
-    this.imageStore = useImageStore();
+    this.textureStore = useTextureStore();
     this.scene = null;
     this.camera = null;
     this.orbit = null;
@@ -33,11 +33,10 @@ export const useCardsGallery = class App {
     this.textureFontSize = 50;
     this.fontScaleFactor = 0.15;
     this.instancedMesh = null;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2(1, 1);
 
     this.uvs = useUvCoordinates().uvs1;
-    this.uvs2 = useUvCoordinates().uvs2;
-    this.uvs3 = useUvCoordinates().uvs3;
-    this.uvs4 = useUvCoordinates().uvs4;
 
     this.createScene();
     this.addEventListeners();
@@ -54,32 +53,32 @@ export const useCardsGallery = class App {
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
+      alpha: true,
       canvas: this.options.canvas,
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.shadowMap.enabled = true;
-    this.renderer.setClearColor(0x000000);
+    this.renderer.setClearColor(0xf9f9f9);
 
     this.scene = new THREE.Scene();
 
-    // this.camera = new THREE.PerspectiveCamera(
-    //   45,
-    //   window.innerWidth / window.innerHeight,
-    //   0.1,
-    //   1000
-    // );
     this.camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      10000
+      50000
     );
 
     this.camera.position.set(0, 0, 1);
 
     this.orbit = new MapControls(this.camera, this.renderer.domElement);
     this.orbit.enableDamping = true;
+    this.orbit.dampingFactor = 0.05;
+    this.orbit.screenSpacePanning = true;
+    this.orbit.minDistance = 0.6;
+    this.orbit.maxDistance = 20;
+    this.orbit.maxPolarAngle = Math.PI / 2;
 
     // this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -121,6 +120,25 @@ export const useCardsGallery = class App {
 
     this.renderer.setAnimationLoop(() => {
       this.renderer.render(this.scene, this.camera);
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+
+      const intersection = this.raycaster.intersectObject(this.instancedMesh);
+
+      if (this.textureStore.textureIndex !== null) return;
+
+      const instanceOpacity =
+        this.instancedMesh.geometry.attributes.instanceOpacity.array;
+      for (let i = 0; i < instanceOpacity.length; i++) {
+        instanceOpacity[i] = 1.0; // Set opacity to 1 (fully opaque) for all instances
+      }
+
+      if (intersection.length > 0) {
+        const instanceId = intersection[0].instanceId;
+        instanceOpacity[instanceId] = 0.8;
+        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
+      } else {
+        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
+      }
       this.orbit.update();
     });
   }
@@ -206,26 +224,39 @@ export const useCardsGallery = class App {
     // Load the texture
     const texture = textureLoader.load("/images/five/atlas_1.png");
 
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
+
     // Shader material to handle UV mapping per instance
     const material = new THREE.ShaderMaterial({
       uniforms: {
         textureAtlas: { value: texture },
+        instanceOpacity: { value: 1.0 }, // Add opacity uniform for instance
       },
       vertexShader: `
-            attribute vec2 instanceUVOffset;
-            varying vec2 vUv;
-            void main() {
-                vUv = uv * vec2(0.0625, 0.0625) + instanceUVOffset; // Adjust UVs per instance
-                gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
-            }
-        `,
+        attribute vec2 instanceUVOffset;  // UV offset for each instance
+        attribute float instanceOpacity;  // Opacity for each instance
+
+        varying vec2 vUv;  // Varying UVs passed to the fragment shader
+        varying float vOpacity;  // Varying opacity passed to the fragment shader
+
+        void main() {
+          vUv = uv * vec2(0.0625) + instanceUVOffset;
+          vOpacity = instanceOpacity;  // Pass opacity value to fragment shader
+          gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+        }
+      `,
       fragmentShader: `
-            uniform sampler2D textureAtlas;
-            varying vec2 vUv;
-            void main() {
-                gl_FragColor = texture2D(textureAtlas, vUv);
-            }
-        `,
+      uniform sampler2D textureAtlas;  // Texture atlas for instances
+      varying vec2 vUv;  // UV coordinates for each instance
+      varying float vOpacity;  // Opacity for each instance
+
+      void main() {
+        vec4 color = texture2D(textureAtlas, vUv);  // Get texture color
+        color.a *= vOpacity;  // Apply opacity to alpha channel
+        gl_FragColor = color;  // Final color with adjusted alpha
+      }
+      `,
       transparent: true,
     });
 
@@ -233,16 +264,26 @@ export const useCardsGallery = class App {
       0.2 * (450 / 630),
       0.2 * (630 / 450)
     );
+
     const instanceCount = this.particles.length;
     const uvsLength = this.uvs.length; // Get total available UV mappings
     const instanceUVOffsets = new Float32Array(instanceCount * 2); // 2D UV offset per instance
 
+    const instanceOpacity = new Float32Array(instanceCount);
+
     // Assign UV offsets, cycling through `this.uvs` using modulo
     for (let i = 0; i < instanceCount; i++) {
+      instanceOpacity[i] = 1.0; // Set initial opacity to 1 (fully opaque)
+
       const uvIndex = i % uvsLength; // Wrap around if `i` exceeds `uvs.length`
       instanceUVOffsets[i * 2] = this.uvs[uvIndex].x; // X offset in atlas
       instanceUVOffsets[i * 2 + 1] = this.uvs[uvIndex].y; // Y offset in atlas
     }
+
+    geometry.setAttribute(
+      "instanceOpacity",
+      new THREE.InstancedBufferAttribute(instanceOpacity, 1)
+    );
 
     // Attach UV offsets as an instanced attribute
     geometry.setAttribute(
@@ -293,6 +334,23 @@ export const useCardsGallery = class App {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    document.addEventListener("mousemove", (event) => {
+      event.preventDefault();
+
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    document.addEventListener("mousedown", (event) => {
+      if (this.textureStore.textureIndex !== null) return;
+
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      const intersections = this.raycaster.intersectObject(this.instancedMesh);
+
+      if (intersections.length > 0) {
+        const instanceId = intersections[0].instanceId;
+        this.textureStore.changeTextureIndex(instanceId);
+      }
     });
   }
 };
