@@ -366,9 +366,11 @@ export const useCardsGallery = class App {
 
         if (isZoomingIn) {
           p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.08);
+          p.y = THREE.MathUtils.lerp(p.y, p.targetY, 0.08);
           p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.08);
         } else if (isZoomingOut) {
           p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.08);
+          p.y = THREE.MathUtils.lerp(p.y, p.originalY, 0.08);
           p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.08);
         }
 
