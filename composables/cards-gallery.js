@@ -367,11 +367,11 @@ export const useCardsGallery = class App {
         const p = this.particles[i];
 
         if (isZoomingIn) {
-          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.1);
-          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.1);
+          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.01);
+          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.01);
         } else if (isZoomingOut) {
-          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.1);
-          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.1);
+          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.01);
+          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.01);
         }
 
         // Update the instance matrix
