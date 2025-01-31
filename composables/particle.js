@@ -4,7 +4,7 @@ export const useParticle = class App {
     this.y = y + 0.1 * (Math.random() - 0.5);
     this.z = 1.5 * (Math.random() - 0.5);
 
-    this.targetX = this.x + 2 * (Math.random() - 0.5);
+    this.targetX = this.x + 2.5 * (Math.random() - 0.5);
     this.targetZ = Math.floor(Math.random() * 5);
     this.originalX = this.x;
     this.originalZ = this.z;

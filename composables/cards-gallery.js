@@ -355,8 +355,6 @@ export const useCardsGallery = class App {
       }
     });
     this.orbit.addEventListener("change", () => {
-      if (this.camera.position.z > 14.5) return;
-
       const currentZ = this.camera.position.z;
 
       // Determine if camera is zooming in or out
