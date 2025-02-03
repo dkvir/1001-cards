@@ -5,6 +5,11 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { DoubleSide, EquirectangularRefractionMapping } from "three";
 import { useTextureStore } from "@/store/texture";
+import {
+  changeRotation,
+  changePosition,
+  createLimitPan,
+} from "@ocio/three-camera-utils";
 
 export const useCardsGallery = class App {
   constructor(options) {
@@ -30,12 +35,15 @@ export const useCardsGallery = class App {
     };
     this.string = "1001";
     this.fontName = "evexweb-Regular";
-    this.textureFontSize = 50;
+    this.textureFontSize = 120;
     this.fontScaleFactor = 0.15;
     this.instancedMesh = null;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(1, 1);
     this.prevCameraZ = null;
+
+    this.mDragging = false;
+    this.mDown = false;
 
     this.uvs = useUvCoordinates();
 
@@ -78,9 +86,23 @@ export const useCardsGallery = class App {
     this.orbit.enableDamping = true;
     this.orbit.dampingFactor = 0.05;
     this.orbit.screenSpacePanning = true;
+    this.orbit.zoomToCursor = true;
     this.orbit.minDistance = 0.6;
-    this.orbit.maxDistance = 15;
+    this.orbit.maxDistance = 50;
     this.orbit.maxPolarAngle = Math.PI / 2;
+    this.enableRotate = false;
+
+    this.orbit.mouseButtons = {
+      LEFT: THREE.MOUSE.PAN,
+      RIGHT: THREE.MOUSE.PAN,
+    };
+    this.orbit.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
+
+    this.limitPan = createLimitPan({
+      camera: this.camera,
+      controls: this.orbit,
+      THREE,
+    });
 
     // this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -169,6 +191,8 @@ export const useCardsGallery = class App {
   refreshText() {
     this.sampleCoordinates();
 
+    console.log(this.textureCoordinates.length);
+
     this.particles = this.textureCoordinates.map((c, cIdx) => {
       const x = c.x * this.fontScaleFactor;
       const y = c.y * this.fontScaleFactor;
@@ -200,10 +224,16 @@ export const useCardsGallery = class App {
       Array(this.textCanvas.height),
       () => new Array(this.textCanvas.width)
     );
+
     for (let i = 0; i < this.textCanvas.height; i++) {
       for (let j = 0; j < this.textCanvas.width; j++) {
-        imageMask[i][j] =
-          imageData.data[(j + i * this.textCanvas.width) * 4] > 0;
+        if (
+          i % Math.floor(Math.random() * 5) == 0 &&
+          j % Math.floor(Math.random() * 5) == 0
+        ) {
+          imageMask[i][j] =
+            imageData.data[(j + i * this.textCanvas.width) * 4] > 0;
+        }
       }
     }
 
@@ -263,8 +293,8 @@ export const useCardsGallery = class App {
     });
 
     const geometry = new THREE.PlaneGeometry(
-      0.2 * (450 / 630),
-      0.2 * (630 / 450)
+      0.3 * (450 / 630),
+      0.25 * (630 / 450)
     );
 
     const instanceCount = this.particles.length;
@@ -344,7 +374,7 @@ export const useCardsGallery = class App {
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     });
     this.options.canvas.addEventListener("click", (event) => {
-      if (this.textureStore.textureIndex !== null) return;
+      if (this.textureStore.textureIndex !== null || this.mDragging) return;
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersections = this.raycaster.intersectObject(this.instancedMesh);
@@ -355,35 +385,51 @@ export const useCardsGallery = class App {
       }
     });
     this.orbit.addEventListener("change", () => {
-      const currentZ = this.camera.position.z;
+      //   const currentZ = this.camera.position.z;
+      //   // Determine if camera is zooming in or out
+      //   const isZoomingIn = currentZ < this.prevCameraZ; // Zooming in (decreasing Z)
+      //   const isZoomingOut = currentZ > this.prevCameraZ; // Zooming out (increasing Z)
+      //   for (let i = 0; i < this.particles.length; i++) {
+      //     const p = this.particles[i];
+      //     if (isZoomingIn) {
+      //       p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.01);
+      //       p.y = THREE.MathUtils.lerp(p.y, p.targetY, 0.01);
+      //       p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.01);
+      //     } else if (isZoomingOut) {
+      //       p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.01);
+      //       p.y = THREE.MathUtils.lerp(p.y, p.originalY, 0.01);
+      //       p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.01);
+      //     }
+      //     // Update the instance matrix
+      //     this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
+      //     this.dummy.updateMatrix();
+      //     this.instancedMesh.setMatrixAt(i, this.dummy.matrix);
+      //   }
+      //   this.instancedMesh.instanceMatrix.needsUpdate = true;
+      //   // Store current Z for next frame comparison
+      //   this.prevCameraZ = currentZ;
 
-      // Determine if camera is zooming in or out
-      const isZoomingIn = currentZ < this.prevCameraZ; // Zooming in (decreasing Z)
-      const isZoomingOut = currentZ > this.prevCameraZ; // Zooming out (increasing Z)
+      this.limitPan({
+        minX: -25,
+        maxX: 25,
+        maxY: 15,
+        minY: -15,
+      });
+    });
 
-      for (let i = 0; i < this.particles.length; i++) {
-        const p = this.particles[i];
-
-        if (isZoomingIn) {
-          p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.08);
-          p.y = THREE.MathUtils.lerp(p.y, p.targetY, 0.08);
-          p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.08);
-        } else if (isZoomingOut) {
-          p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.08);
-          p.y = THREE.MathUtils.lerp(p.y, p.originalY, 0.08);
-          p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.08);
-        }
-
-        // Update the instance matrix
-        this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
-        this.dummy.updateMatrix();
-        this.instancedMesh.setMatrixAt(i, this.dummy.matrix);
+    window.addEventListener("mousedown", () => {
+      this.mDown = true;
+    });
+    window.addEventListener("mousemove", () => {
+      if (this.mDown) {
+        this.mDragging = true;
       }
-
-      this.instancedMesh.instanceMatrix.needsUpdate = true;
-
-      // Store current Z for next frame comparison
-      this.prevCameraZ = currentZ;
+    });
+    window.addEventListener("mouseup", () => {
+      setTimeout(() => {
+        this.mDown = false;
+        this.mDragging = false;
+      }, 500);
     });
   }
 };
