@@ -5,16 +5,14 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { DoubleSide, EquirectangularRefractionMapping } from "three";
 import { useTextureStore } from "@/store/texture";
-import {
-  changeRotation,
-  changePosition,
-  createLimitPan,
-} from "@ocio/three-camera-utils";
+import { createLimitPan } from "@ocio/three-camera-utils";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 export const useCardsGallery = class App {
   constructor(options) {
     this.options = options;
     this.textureStore = useTextureStore();
+    this.textureLoader = useTextureLoaderStore();
     this.scene = null;
     this.camera = null;
     this.orbit = null;
@@ -91,6 +89,7 @@ export const useCardsGallery = class App {
     this.orbit.maxDistance = 50;
     this.orbit.maxPolarAngle = Math.PI / 2;
     this.enableRotate = false;
+    this.orbit.enableZoom = true;
 
     this.orbit.mouseButtons = {
       LEFT: THREE.MOUSE.PAN,
@@ -191,8 +190,6 @@ export const useCardsGallery = class App {
   refreshText() {
     this.sampleCoordinates();
 
-    console.log(this.textureCoordinates.length);
-
     this.particles = this.textureCoordinates.map((c, cIdx) => {
       const x = c.x * this.fontScaleFactor;
       const y = c.y * this.fontScaleFactor;
@@ -251,18 +248,18 @@ export const useCardsGallery = class App {
   }
 
   createInstancedMesh() {
-    const textureLoader = new THREE.TextureLoader();
+    // const textureLoader = new THREE.TextureLoader();
 
-    // Load the texture
-    const texture = textureLoader.load("/images/five/atlas_1.png");
+    // // Load the texture
+    // const texture = textureLoader.load("/images/five/atlas_1.png");
 
-    texture.magFilter = THREE.NearestFilter;
-    texture.minFilter = THREE.NearestFilter;
+    this.textureLoader.loadedTexture.magFilter = THREE.NearestFilter;
+    this.textureLoader.loadedTexture.minFilter = THREE.NearestFilter;
 
     // Shader material to handle UV mapping per instance
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        textureAtlas: { value: texture },
+        textureAtlas: { value: this.textureLoader.loadedTexture },
         instanceOpacity: { value: 1.0 }, // Add opacity uniform for instance
       },
       vertexShader: `
@@ -385,30 +382,6 @@ export const useCardsGallery = class App {
       }
     });
     this.orbit.addEventListener("change", () => {
-      //   const currentZ = this.camera.position.z;
-      //   // Determine if camera is zooming in or out
-      //   const isZoomingIn = currentZ < this.prevCameraZ; // Zooming in (decreasing Z)
-      //   const isZoomingOut = currentZ > this.prevCameraZ; // Zooming out (increasing Z)
-      //   for (let i = 0; i < this.particles.length; i++) {
-      //     const p = this.particles[i];
-      //     if (isZoomingIn) {
-      //       p.x = THREE.MathUtils.lerp(p.x, p.targetX, 0.01);
-      //       p.y = THREE.MathUtils.lerp(p.y, p.targetY, 0.01);
-      //       p.z = THREE.MathUtils.lerp(p.z, p.targetZ, 0.01);
-      //     } else if (isZoomingOut) {
-      //       p.x = THREE.MathUtils.lerp(p.x, p.originalX, 0.01);
-      //       p.y = THREE.MathUtils.lerp(p.y, p.originalY, 0.01);
-      //       p.z = THREE.MathUtils.lerp(p.z, p.originalZ, 0.01);
-      //     }
-      //     // Update the instance matrix
-      //     this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
-      //     this.dummy.updateMatrix();
-      //     this.instancedMesh.setMatrixAt(i, this.dummy.matrix);
-      //   }
-      //   this.instancedMesh.instanceMatrix.needsUpdate = true;
-      //   // Store current Z for next frame comparison
-      //   this.prevCameraZ = currentZ;
-
       this.limitPan({
         minX: -25,
         maxX: 25,

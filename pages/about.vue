@@ -7,31 +7,31 @@
 </template>
 
 <script setup>
-import { useImageStore } from "@/store/imagesLoaded";
-const imageStore = useImageStore();
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
+const textureStore = useTextureLoaderStore();
 const horizontalScroll = ref(null);
 
-// watch(
-//   () => imageStore.isLoaded,
-//   (curr) => {
-//     horizontalScroll.value = new useCardsGallery({
-//       canvas: document.querySelector(".canvas"),
-//     });
-//   }
-// );
+watch(
+  () => textureStore.isLoaded,
+  (curr) => {
+    horizontalScroll.value = new useCardsGallery({
+      canvas: document.querySelector(".canvas"),
+    });
+  }
+);
 
 onMounted(() => {
-  // const imageUrls = [];
+  const imageUrls = [
+    "/images/five/atlas_1.png",
+    "/images/five/atlas_2.png",
+    "/images/five/atlas_1.png",
+    "/images/five/atlas_4.png",
+  ];
 
-  // for (let i = 0; i < imageStore.totalImages; i++) {
-  //   imageUrls.push(`https://d3l19dpo35tmza.cloudfront.net/${i + 1}.png`);
-  // }
+  const getRandomImage = () =>
+    imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
-  // imageStore.preloadImages(imageUrls);
-
-  horizontalScroll.value = new useCardsGallery({
-    canvas: document.querySelector(".canvas"),
-  });
+  textureStore.preloadTexture(getRandomImage());
 });
 </script>
 
