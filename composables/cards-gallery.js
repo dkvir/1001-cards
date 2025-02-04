@@ -10,264 +10,260 @@ import { useTextureLoaderStore } from "@/store/texturesLoaded";
 import gsap from "gsap";
 
 export const useCardsGallery = class App {
-	constructor(options) {
-		this.options = options;
-		this.textureStore = useTextureStore();
-		this.textureLoader = useTextureLoaderStore();
-		this.scene = null;
-		this.camera = null;
-		this.orbit = null;
-		this.renderer = null;
-		this.textCanvas = null;
-		this.textCtx = null;
-		this.dummy = null;
-		this.stringBox = null;
-		this.textInputEl = null;
-		this.textureCoordinates = [];
-		this.particles = [];
-		this.stringBox = {
-			wTexture: 0,
-			wScene: 0,
-			hTexture: 0,
-			hScene: 0,
-			caretPosScene: [],
-		};
-		this.string = "1001";
-		this.fontName = "evexweb-Regular";
-		this.textureFontSize = 120;
-		this.fontScaleFactor = 0.15;
-		this.instancedMesh = null;
-		this.raycaster = new THREE.Raycaster();
-		this.mouse = new THREE.Vector2(1, 1);
-		this.prevCameraZ = null;
+  constructor(options) {
+    this.options = options;
+    this.textureStore = useTextureStore();
+    this.textureLoader = useTextureLoaderStore();
+    this.scene = null;
+    this.camera = null;
+    this.orbit = null;
+    this.renderer = null;
+    this.textCanvas = null;
+    this.textCtx = null;
+    this.dummy = null;
+    this.stringBox = null;
+    this.textInputEl = null;
+    this.textureCoordinates = [];
+    this.particles = [];
+    this.stringBox = {
+      wTexture: 0,
+      wScene: 0,
+      hTexture: 0,
+      hScene: 0,
+      caretPosScene: [],
+    };
+    this.string = "1001";
+    this.fontName = "evexweb-Regular";
+    this.textureFontSize = 120;
+    this.fontScaleFactor = 0.15;
+    this.instancedMesh = null;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2(1, 1);
+    this.prevCameraZ = null;
 
-		this.mDragging = false;
-		this.mDown = false;
+    this.mDragging = false;
+    this.mDown = false;
 
-		this.uvs = useUvCoordinates();
+    this.uvs = useUvCoordinates();
 
-		this.createScene();
-		this.addEventListeners();
+    this.createScene();
+    this.addEventListeners();
+  }
 
-		setTimeout(() => {
-			this.zoomToPoint(new THREE.Vector3(-2, 0, 0), 5, 2, { delay: 3 });
-		}, 2000);
-	}
+  createScene() {
+    this.textInputEl = document.querySelector("#text-input");
 
-	createScene() {
-		this.textInputEl = document.querySelector("#text-input");
+    this.textInputEl.style.fontSize = this.textureFontSize + "px";
+    this.textInputEl.style.font =
+      "100 " + this.textureFontSize + "px " + this.fontName;
+    this.textInputEl.style.lineHeight = 1.1 * this.textureFontSize + "px";
+    this.textInputEl.style.fontWeight = 100;
 
-		this.textInputEl.style.fontSize = this.textureFontSize + "px";
-		this.textInputEl.style.font =
-			"100 " + this.textureFontSize + "px " + this.fontName;
-		this.textInputEl.style.lineHeight = 1.1 * this.textureFontSize + "px";
-		this.textInputEl.style.fontWeight = 100;
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      canvas: this.options.canvas,
+    });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.setClearColor(0xf9f9f9);
 
-		this.renderer = new THREE.WebGLRenderer({
-			antialias: true,
-			alpha: true,
-			canvas: this.options.canvas,
-		});
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.renderer.shadowMap.enabled = true;
-		this.renderer.setClearColor(0xf9f9f9);
+    this.scene = new THREE.Scene();
 
-		this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100000
+    );
 
-		this.camera = new THREE.PerspectiveCamera(
-			45,
-			window.innerWidth / window.innerHeight,
-			0.1,
-			100000
-		);
+    this.camera.position.set(0, 0, 1);
+    this.prevCameraZ = this.camera.position.z;
 
-		this.camera.position.set(0, 0, 1);
-		this.prevCameraZ = this.camera.position.z;
+    this.orbit = new MapControls(this.camera, this.renderer.domElement);
+    this.orbit.enableDamping = true;
+    this.orbit.dampingFactor = 0.05;
+    this.orbit.screenSpacePanning = true;
+    this.orbit.zoomToCursor = true;
+    this.orbit.minDistance = 0.6;
+    this.orbit.maxDistance = 50;
+    this.orbit.maxPolarAngle = Math.PI / 2;
+    this.enableRotate = false;
+    this.orbit.enableZoom = true;
 
-		this.orbit = new MapControls(this.camera, this.renderer.domElement);
-		this.orbit.enableDamping = true;
-		this.orbit.dampingFactor = 0.05;
-		this.orbit.screenSpacePanning = true;
-		this.orbit.zoomToCursor = true;
-		this.orbit.minDistance = 0.6;
-		this.orbit.maxDistance = 50;
-		this.orbit.maxPolarAngle = Math.PI / 2;
-		this.enableRotate = false;
-		this.orbit.enableZoom = true;
+    this.orbit.mouseButtons = {
+      LEFT: THREE.MOUSE.PAN,
+      RIGHT: THREE.MOUSE.PAN,
+    };
+    this.orbit.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
 
-		this.orbit.mouseButtons = {
-			LEFT: THREE.MOUSE.PAN,
-			RIGHT: THREE.MOUSE.PAN,
-		};
-		this.orbit.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
+    this.limitPan = createLimitPan({
+      camera: this.camera,
+      controls: this.orbit,
+      THREE,
+    });
 
-		this.limitPan = createLimitPan({
-			camera: this.camera,
-			controls: this.orbit,
-			THREE,
-		});
+    // this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
 
-		// this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
+    this.textCanvas = document.createElement("canvas");
+    this.textCanvas.width = this.textCanvas.height = 0;
+    this.textCtx = this.textCanvas.getContext("2d");
 
-		this.textCanvas = document.createElement("canvas");
-		this.textCanvas.width = this.textCanvas.height = 0;
-		this.textCtx = this.textCanvas.getContext("2d");
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    this.scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1.2);
+    pointLight.position.set(-20, 10, 20);
+    pointLight.castShadow = true;
+    pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = 2048;
+    this.scene.add(pointLight);
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-		this.scene.add(ambientLight);
-		const pointLight = new THREE.PointLight(0xffffff, 1.2);
-		pointLight.position.set(-20, 10, 20);
-		pointLight.castShadow = true;
-		pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = 2048;
-		this.scene.add(pointLight);
+    const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const trackingPlaneMaterial = new THREE.MeshBasicMaterial({
+      visible: false,
+    });
+    const trackingPlane = new THREE.Mesh(planeGeometry, trackingPlaneMaterial);
+    trackingPlane.position.z = 6;
+    this.scene.add(trackingPlane);
 
-		const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
-		const trackingPlaneMaterial = new THREE.MeshBasicMaterial({
-			visible: false,
-		});
-		const trackingPlane = new THREE.Mesh(planeGeometry, trackingPlaneMaterial);
-		trackingPlane.position.z = 6;
-		this.scene.add(trackingPlane);
+    const shadowPlaneMaterial = new THREE.ShadowMaterial({
+      opacity: 0.2,
+    });
 
-		const shadowPlaneMaterial = new THREE.ShadowMaterial({
-			opacity: 0.2,
-		});
+    const shadowPlaneMesh = new THREE.Mesh(planeGeometry, shadowPlaneMaterial);
+    shadowPlaneMesh.position.z = -0.2;
+    shadowPlaneMesh.receiveShadow = true;
+    this.scene.add(shadowPlaneMesh);
 
-		const shadowPlaneMesh = new THREE.Mesh(planeGeometry, shadowPlaneMaterial);
-		shadowPlaneMesh.position.z = -0.2;
-		shadowPlaneMesh.receiveShadow = true;
-		this.scene.add(shadowPlaneMesh);
+    this.dummy = new THREE.Object3D();
 
-		this.dummy = new THREE.Object3D();
+    this.textInputEl.innerHTML = this.string;
+    this.handleInput();
+    this.refreshText();
+    this.updateParticlesMatrices();
 
-		this.textInputEl.innerHTML = this.string;
-		this.handleInput();
-		this.refreshText();
-		this.updateParticlesMatrices();
+    this.renderer.setAnimationLoop(() => {
+      this.renderer.render(this.scene, this.camera);
+      this.raycaster.setFromCamera(this.mouse, this.camera);
 
-		this.renderer.setAnimationLoop(() => {
-			this.renderer.render(this.scene, this.camera);
-			this.raycaster.setFromCamera(this.mouse, this.camera);
+      const intersection = this.raycaster.intersectObject(this.instancedMesh);
 
-			const intersection = this.raycaster.intersectObject(this.instancedMesh);
+      if (this.textureStore.textureIndex !== null) return;
 
-			if (this.textureStore.textureIndex !== null) return;
+      const instanceOpacity =
+        this.instancedMesh.geometry.attributes.instanceOpacity.array;
+      for (let i = 0; i < instanceOpacity.length; i++) {
+        instanceOpacity[i] = 1.0; // Set opacity to 1 (fully opaque) for all instances
+      }
 
-			const instanceOpacity =
-				this.instancedMesh.geometry.attributes.instanceOpacity.array;
-			for (let i = 0; i < instanceOpacity.length; i++) {
-				instanceOpacity[i] = 1.0; // Set opacity to 1 (fully opaque) for all instances
-			}
+      if (intersection.length > 0) {
+        const instanceId = intersection[0].instanceId;
+        instanceOpacity[instanceId] = 0.8;
+        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
+      } else {
+        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
+      }
+      this.orbit.update();
+    });
+  }
 
-			if (intersection.length > 0) {
-				const instanceId = intersection[0].instanceId;
-				instanceOpacity[instanceId] = 0.8;
-				this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
-			} else {
-				this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
-			}
-			this.orbit.update();
-		});
-	}
+  handleInput() {
+    this.stringBox.wTexture = this.textInputEl.clientWidth;
+    this.stringBox.wScene = this.stringBox.wTexture * this.fontScaleFactor;
+    this.stringBox.hTexture = this.textInputEl.clientHeight;
+    this.stringBox.hScene = this.stringBox.hTexture * this.fontScaleFactor;
+    this.stringBox.caretPosScene = getCaretCoordinates().map(
+      (c) => c * this.fontScaleFactor
+    );
 
-	handleInput() {
-		this.stringBox.wTexture = this.textInputEl.clientWidth;
-		this.stringBox.wScene = this.stringBox.wTexture * this.fontScaleFactor;
-		this.stringBox.hTexture = this.textInputEl.clientHeight;
-		this.stringBox.hScene = this.stringBox.hTexture * this.fontScaleFactor;
-		this.stringBox.caretPosScene = getCaretCoordinates().map(
-			(c) => c * this.fontScaleFactor
-		);
+    function getCaretCoordinates() {
+      const range = window.getSelection().getRangeAt(0);
+      const rects = range.getClientRects();
+      if (rects[0]) {
+        return [rects[0].left, rects[0].top];
+      } else {
+        document.execCommand("selectAll", false, null);
+        return [0, 0];
+      }
+    }
+  }
 
-		function getCaretCoordinates() {
-			const range = window.getSelection().getRangeAt(0);
-			const rects = range.getClientRects();
-			if (rects[0]) {
-				return [rects[0].left, rects[0].top];
-			} else {
-				document.execCommand("selectAll", false, null);
-				return [0, 0];
-			}
-		}
-	}
+  refreshText() {
+    this.sampleCoordinates();
 
-	refreshText() {
-		this.sampleCoordinates();
+    this.particles = this.textureCoordinates.map((c, cIdx) => {
+      const x = c.x * this.fontScaleFactor;
+      const y = c.y * this.fontScaleFactor;
+      let p = new useParticle([x, y]);
+      return p;
+    });
 
-		this.particles = this.textureCoordinates.map((c, cIdx) => {
-			const x = c.x * this.fontScaleFactor;
-			const y = c.y * this.fontScaleFactor;
-			let p = new useParticle([x, y]);
-			return p;
-		});
+    this.createInstancedMesh();
+    this.makeTextFitScreen();
+  }
 
-		this.createInstancedMesh();
-		this.makeTextFitScreen();
-	}
+  sampleCoordinates() {
+    this.textCanvas.width = this.stringBox.wTexture;
+    this.textCanvas.height = this.stringBox.hTexture;
+    this.textCtx.font = "100 " + this.textureFontSize + "px " + this.fontName;
+    this.textCtx.fillStyle = "#2a9d8f";
+    this.textCtx.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
 
-	sampleCoordinates() {
-		this.textCanvas.width = this.stringBox.wTexture;
-		this.textCanvas.height = this.stringBox.hTexture;
-		this.textCtx.font = "100 " + this.textureFontSize + "px " + this.fontName;
-		this.textCtx.fillStyle = "#2a9d8f";
-		this.textCtx.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
+    this.textCtx.fillText(this.string, 0, 0.8 * this.stringBox.hTexture);
 
-		this.textCtx.fillText(this.string, 0, 0.8 * this.stringBox.hTexture);
+    // Image data to 2d array
+    const imageData = this.textCtx.getImageData(
+      0,
+      0,
+      this.textCanvas.width,
+      this.textCanvas.height
+    );
+    const imageMask = Array.from(
+      Array(this.textCanvas.height),
+      () => new Array(this.textCanvas.width)
+    );
 
-		// Image data to 2d array
-		const imageData = this.textCtx.getImageData(
-			0,
-			0,
-			this.textCanvas.width,
-			this.textCanvas.height
-		);
-		const imageMask = Array.from(
-			Array(this.textCanvas.height),
-			() => new Array(this.textCanvas.width)
-		);
+    for (let i = 0; i < this.textCanvas.height; i++) {
+      for (let j = 0; j < this.textCanvas.width; j++) {
+        if (
+          i % Math.floor(Math.random() * 5) == 0 &&
+          j % Math.floor(Math.random() * 5) == 0
+        ) {
+          imageMask[i][j] =
+            imageData.data[(j + i * this.textCanvas.width) * 4] > 0;
+        }
+      }
+    }
 
-		for (let i = 0; i < this.textCanvas.height; i++) {
-			for (let j = 0; j < this.textCanvas.width; j++) {
-				if (
-					i % Math.floor(Math.random() * 5) == 0 &&
-					j % Math.floor(Math.random() * 5) == 0
-				) {
-					imageMask[i][j] =
-						imageData.data[(j + i * this.textCanvas.width) * 4] > 0;
-				}
-			}
-		}
+    for (let i = 0; i < this.textCanvas.height; i++) {
+      for (let j = 0; j < this.textCanvas.width; j++) {
+        if (imageMask[i][j]) {
+          this.textureCoordinates.push({
+            x: j,
+            y: i,
+            old: false,
+          });
+        }
+      }
+    }
+  }
 
-		for (let i = 0; i < this.textCanvas.height; i++) {
-			for (let j = 0; j < this.textCanvas.width; j++) {
-				if (imageMask[i][j]) {
-					this.textureCoordinates.push({
-						x: j,
-						y: i,
-						old: false,
-					});
-				}
-			}
-		}
-	}
+  createInstancedMesh() {
+    // const textureLoader = new THREE.TextureLoader();
 
-	createInstancedMesh() {
-		// const textureLoader = new THREE.TextureLoader();
+    // // Load the texture
+    // const texture = textureLoader.load("/images/five/atlas_1.png");
 
-		// // Load the texture
-		// const texture = textureLoader.load("/images/five/atlas_1.png");
+    this.textureLoader.loadedTexture.magFilter = THREE.NearestFilter;
+    this.textureLoader.loadedTexture.minFilter = THREE.NearestFilter;
 
-		this.textureLoader.loadedTexture.magFilter = THREE.NearestFilter;
-		this.textureLoader.loadedTexture.minFilter = THREE.NearestFilter;
-
-		// Shader material to handle UV mapping per instance
-		const material = new THREE.ShaderMaterial({
-			uniforms: {
-				textureAtlas: { value: this.textureLoader.loadedTexture },
-				instanceOpacity: { value: 1.0 }, // Add opacity uniform for instance
-			},
-			vertexShader: `
+    // Shader material to handle UV mapping per instance
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        textureAtlas: { value: this.textureLoader.loadedTexture },
+        instanceOpacity: { value: 1.0 }, // Add opacity uniform for instance
+      },
+      vertexShader: `
         attribute vec2 instanceUVOffset;  // UV offset for each instance
         attribute float instanceOpacity;  // Opacity for each instance
 
@@ -280,7 +276,7 @@ export const useCardsGallery = class App {
           gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
         }
       `,
-			fragmentShader: `
+      fragmentShader: `
       uniform sampler2D textureAtlas;  // Texture atlas for instances
       varying vec2 vUv;  // UV coordinates for each instance
       varying float vOpacity;  // Opacity for each instance
@@ -291,148 +287,148 @@ export const useCardsGallery = class App {
         gl_FragColor = color;  // Final color with adjusted alpha
       }
       `,
-			transparent: true,
-		});
+      transparent: true,
+    });
 
-		const geometry = new THREE.PlaneGeometry(
-			0.3 * (450 / 630),
-			0.25 * (630 / 450)
-		);
+    const geometry = new THREE.PlaneGeometry(
+      0.3 * (450 / 630),
+      0.25 * (630 / 450)
+    );
 
-		const instanceCount = this.particles.length;
-		const uvsLength = this.uvs.length; // Get total available UV mappings
-		const instanceUVOffsets = new Float32Array(instanceCount * 2); // 2D UV offset per instance
+    const instanceCount = this.particles.length;
+    const uvsLength = this.uvs.length; // Get total available UV mappings
+    const instanceUVOffsets = new Float32Array(instanceCount * 2); // 2D UV offset per instance
 
-		const instanceOpacity = new Float32Array(instanceCount);
+    const instanceOpacity = new Float32Array(instanceCount);
 
-		// Assign UV offsets, cycling through `this.uvs` using modulo
-		for (let i = 0; i < instanceCount; i++) {
-			instanceOpacity[i] = 1.0; // Set initial opacity to 1 (fully opaque)
+    // Assign UV offsets, cycling through `this.uvs` using modulo
+    for (let i = 0; i < instanceCount; i++) {
+      instanceOpacity[i] = 1.0; // Set initial opacity to 1 (fully opaque)
 
-			const uvIndex = i % uvsLength; // Wrap around if `i` exceeds `uvs.length`
-			instanceUVOffsets[i * 2] = this.uvs[uvIndex].x; // X offset in atlas
-			instanceUVOffsets[i * 2 + 1] = this.uvs[uvIndex].y; // Y offset in atlas
-		}
+      const uvIndex = i % uvsLength; // Wrap around if `i` exceeds `uvs.length`
+      instanceUVOffsets[i * 2] = this.uvs[uvIndex].x; // X offset in atlas
+      instanceUVOffsets[i * 2 + 1] = this.uvs[uvIndex].y; // Y offset in atlas
+    }
 
-		geometry.setAttribute(
-			"instanceOpacity",
-			new THREE.InstancedBufferAttribute(instanceOpacity, 1)
-		);
+    geometry.setAttribute(
+      "instanceOpacity",
+      new THREE.InstancedBufferAttribute(instanceOpacity, 1)
+    );
 
-		// Attach UV offsets as an instanced attribute
-		geometry.setAttribute(
-			"instanceUVOffset",
-			new THREE.InstancedBufferAttribute(instanceUVOffsets, 2)
-		);
+    // Attach UV offsets as an instanced attribute
+    geometry.setAttribute(
+      "instanceUVOffset",
+      new THREE.InstancedBufferAttribute(instanceUVOffsets, 2)
+    );
 
-		this.instancedMesh = new THREE.InstancedMesh(
-			geometry,
-			material,
-			instanceCount
-		);
-		this.scene.add(this.instancedMesh);
+    this.instancedMesh = new THREE.InstancedMesh(
+      geometry,
+      material,
+      instanceCount
+    );
+    this.scene.add(this.instancedMesh);
 
-		this.instancedMesh.position.x = -0.5 * this.stringBox.wScene;
-		this.instancedMesh.position.y = -0.6 * this.stringBox.hScene;
+    this.instancedMesh.position.x = -0.5 * this.stringBox.wScene;
+    this.instancedMesh.position.y = -0.6 * this.stringBox.hScene;
 
-		this.instancedMesh.castShadow = true;
-	}
+    this.instancedMesh.castShadow = true;
+  }
 
-	updateParticlesMatrices() {
-		let idx = 0;
-		this.particles.forEach((p) => {
-			this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
-			this.dummy.scale.set(p.scale, p.scale, p.scale);
-			this.dummy.updateMatrix();
-			this.instancedMesh.setMatrixAt(idx, this.dummy.matrix);
-			idx++;
-		});
-		this.instancedMesh.instanceMatrix.needsUpdate = true;
-	}
+  updateParticlesMatrices() {
+    let idx = 0;
+    this.particles.forEach((p) => {
+      this.dummy.position.set(p.x, this.stringBox.hScene - p.y, p.z);
+      this.dummy.scale.set(p.scale, p.scale, p.scale);
+      this.dummy.updateMatrix();
+      this.instancedMesh.setMatrixAt(idx, this.dummy.matrix);
+      idx++;
+    });
+    this.instancedMesh.instanceMatrix.needsUpdate = true;
+  }
 
-	makeTextFitScreen() {
-		const fov = this.camera.fov * (Math.PI / 180);
-		const fovH = 2 * Math.atan(Math.tan(fov / 2) * this.camera.aspect);
-		const dx = Math.abs((0.7 * this.stringBox.wScene) / Math.tan(0.5 * fovH));
-		const dy = Math.abs((0.6 * this.stringBox.hScene) / Math.tan(0.5 * fov));
-		const factor = Math.max(dx, dy) / this.camera.position.length();
-		if (factor > 1) {
-			this.camera.position.x *= factor;
-			this.camera.position.y *= factor;
-			this.camera.position.z *= factor;
-		}
-	}
+  makeTextFitScreen() {
+    const fov = this.camera.fov * (Math.PI / 180);
+    const fovH = 2 * Math.atan(Math.tan(fov / 2) * this.camera.aspect);
+    const dx = Math.abs((0.7 * this.stringBox.wScene) / Math.tan(0.5 * fovH));
+    const dy = Math.abs((0.6 * this.stringBox.hScene) / Math.tan(0.5 * fov));
+    const factor = Math.max(dx, dy) / this.camera.position.length();
+    if (factor > 1) {
+      this.camera.position.x *= factor;
+      this.camera.position.y *= factor;
+      this.camera.position.z *= factor;
+    }
+  }
 
-	addEventListeners() {
-		window.addEventListener("resize", () => {
-			this.camera.aspect = window.innerWidth / window.innerHeight;
-			this.camera.updateProjectionMatrix();
-			this.renderer.setSize(window.innerWidth, window.innerHeight);
-		});
-		document.addEventListener("mousemove", (event) => {
-			event.preventDefault();
+  addEventListeners() {
+    window.addEventListener("resize", () => {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    document.addEventListener("mousemove", (event) => {
+      event.preventDefault();
 
-			this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-			this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-		});
-		this.options.canvas.addEventListener("click", (event) => {
-			if (this.textureStore.textureIndex !== null || this.mDragging) return;
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    this.options.canvas.addEventListener("click", (event) => {
+      if (this.textureStore.textureIndex !== null || this.mDragging) return;
 
-			this.raycaster.setFromCamera(this.mouse, this.camera);
-			const intersections = this.raycaster.intersectObject(this.instancedMesh);
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      const intersections = this.raycaster.intersectObject(this.instancedMesh);
 
-			if (intersections.length > 0) {
-				const instanceId = intersections[0].instanceId;
-				this.textureStore.changeTextureIndex(instanceId);
-			}
-		});
-		this.orbit.addEventListener("change", () => {
-			this.limitPan({
-				minX: -25,
-				maxX: 25,
-				maxY: 15,
-				minY: -15,
-			});
-		});
+      if (intersections.length > 0) {
+        const instanceId = intersections[0].instanceId;
+        this.textureStore.changeTextureIndex(instanceId);
+      }
+    });
+    this.orbit.addEventListener("change", () => {
+      this.limitPan({
+        minX: -25,
+        maxX: 25,
+        maxY: 15,
+        minY: -15,
+      });
+    });
 
-		window.addEventListener("mousedown", () => {
-			this.mDown = true;
-		});
-		window.addEventListener("mousemove", () => {
-			if (this.mDown) {
-				this.mDragging = true;
-			}
-		});
-		window.addEventListener("mouseup", () => {
-			setTimeout(() => {
-				this.mDown = false;
-				this.mDragging = false;
-			}, 500);
-		});
-	}
+    window.addEventListener("mousedown", () => {
+      this.mDown = true;
+    });
+    window.addEventListener("mousemove", () => {
+      if (this.mDown) {
+        this.mDragging = true;
+      }
+    });
+    window.addEventListener("mouseup", () => {
+      setTimeout(() => {
+        this.mDown = false;
+        this.mDragging = false;
+      }, 500);
+    });
+  }
 
-	//autozoom function :3
-	zoomToPoint(
-		targetPoint = new THREE.Vector3(-2, 0, 0),
-		targetZoom = 2,
-		duration = 5
-	) {
-		const startPosition = this.camera.position.clone();
+  //autozoom function :3
+  zoomToPoint(
+    targetPoint = new THREE.Vector3(-2, 0, 0),
+    targetZoom = 5,
+    duration = 2
+  ) {
+    const startPosition = this.camera.position.clone();
 
-		gsap.to(this.camera.position, {
-			x: targetPoint.x,
-			y: startPosition.y,
-			z: targetZoom,
-			duration: duration,
-			ease: "power2.inOut",
-			onUpdate: () => {
-				this.orbit.target.set(
-					this.camera.position.x,
-					this.camera.position.y,
-					0
-				);
-				this.orbit.update();
-			},
-		});
-	}
+    gsap.to(this.camera.position, {
+      x: targetPoint.x,
+      y: startPosition.y,
+      z: targetZoom,
+      duration: duration,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        this.orbit.target.set(
+          this.camera.position.x,
+          this.camera.position.y,
+          0
+        );
+        this.orbit.update();
+      },
+    });
+  }
 };

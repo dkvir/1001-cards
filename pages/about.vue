@@ -19,6 +19,12 @@ watch(
     });
   }
 );
+watch(
+  () => textureStore.loaderComplete,
+  (curr) => {
+    horizontalScroll.value.zoomToPoint();
+  }
+);
 
 onMounted(() => {
   const imageUrls = [
@@ -31,7 +37,7 @@ onMounted(() => {
   const getRandomImage = () =>
     imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
-  textureStore.preloadTexture(getRandomImage());
+  textureStore.preloadTexture(imageUrls[0]);
 });
 </script>
 
