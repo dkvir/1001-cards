@@ -6,6 +6,8 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
     loadedTexture: null,
     isLoading: false,
     isLoaded: false,
+    timelineCompete: false,
+    loaderComplete: false,
   }),
   actions: {
     preloadTexture(url) {
@@ -27,6 +29,12 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
           }
         );
       });
+    },
+    changeTimelineLoaded(status) {
+      this.timelineCompete = status;
+    },
+    changeloaderComplete(status) {
+      this.loaderComplete = status;
     },
   },
 });
