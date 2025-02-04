@@ -39,5 +39,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  transpile: ["three"],
+  build: {
+    transpile: ["three"],
+  },
 });
