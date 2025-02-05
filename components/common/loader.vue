@@ -74,9 +74,7 @@ watch(
                     onComplete: () => {
                       setTimeout(() => {
                         textureloadedStore.changeloaderComplete(true);
-                        setTimeout(() => {
-                          setLetterIconOpacity.value = true;
-                        }, 700);
+                        setLetterIconOpacity.value = true;
                       }, 500);
                     },
                   }
@@ -207,17 +205,17 @@ onMounted(() => {
     position: fixed;
     top: var(--lettering-icon-top, 0);
     left: 50%;
-    transform: translate3d(
-      -50%,
-      calc(-100px + var(--text-transform-y, 0px)),
-      0
-    );
+    transform: translate3d(-50%, calc(-100px + var(--text-transform-y, 0px)), 0)
+      scale(var(--lettering-icon-scale, 1));
     z-index: 2;
     opacity: var(--lettering-opacity, 0);
     @include default-transitions(opacity);
     transition-duration: 0.5s;
     &.has-opacity {
       --lettering-opacity: 0;
+      --lettering-icon-scale: 10;
+      transition: transform 2s ease-in-out, opacity 1s ease-in-out;
+      transition-delay: 0.45s;
     }
   }
 }
