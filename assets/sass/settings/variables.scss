@@ -11,15 +11,17 @@ $square-size: 20px;
 $sizes: "xxs", "xs", "s", "m", "l", "xl", "xxl", "3xl", "4xl", "5xl";
 
 $colors: (
-  "transparent": transparent,
-  "black": #000,
-  "white": #fff,
-  "eleonor": #f9f9f9,
-  "yellow": #f6c45f,
+	"transparent": transparent,
+	"black": #000,
+	"white": #fff,
+	"eleonor": #f9f9f9,
+	"yellow": #f6c45f,
+	"evex-blue": #028280,
 );
 
 $fonts: (
-  "evex-regular": "Evex-Regular",
-  "evex1001": "Evex1001",
-  "evexweb-regular": "evexweb-Regular",
+	"evex-regular": "Evex-Regular",
+	"evex1001": "Evex1001",
+	"evexweb-regular": "evexweb-Regular",
+	"ping-regular": "PingRoundGeLVariable-Regular",
 );

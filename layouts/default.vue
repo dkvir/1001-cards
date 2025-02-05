@@ -1,8 +1,9 @@
 <template>
-  <div class="default-layout">
-    <slot />
-    <common-loader />
-  </div>
+	<div class="default-layout">
+		<slot />
+		<common-loader />
+		<common-header />
+	</div>
 </template>
 
 <script setup></script>
