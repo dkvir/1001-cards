@@ -21,8 +21,17 @@
     </div>
     <div class="content flex-center flex-column">
       <div id="text">1001</div>
-      <nuxt-icon name="lettering-icon" class="lettering-icon" filled />
     </div>
+    <nuxt-icon
+      name="lettering-icon"
+      :class="[
+        'lettering-icon',
+        {
+          'has-opacity': setLetterIconOpacity,
+        },
+      ]"
+      filled
+    />
   </div>
 </template>
 
@@ -32,7 +41,8 @@ import { useTextureLoaderStore } from "@/store/texturesLoaded";
 const textureloadedStore = useTextureLoaderStore();
 
 const textEl = ref(null);
-let contentEl = ref(null);
+const letteringIcon = ref(null);
+const setLetterIconOpacity = ref(false);
 
 watch(
   () => [textureloadedStore.loadedTexture, textureloadedStore.timelineCompete],
@@ -64,6 +74,7 @@ watch(
                     onComplete: () => {
                       setTimeout(() => {
                         textureloadedStore.changeloaderComplete(true);
+                        setLetterIconOpacity.value = true;
                       }, 500);
                     },
                   }
@@ -79,11 +90,14 @@ watch(
 
 onMounted(() => {
   textEl.value = document.getElementById("text");
-  contentEl.value = document.querySelector(".loader .content");
+  letteringIcon.value = document.querySelector(".lettering-icon");
 
   let distance = textEl.value.getBoundingClientRect().bottom;
 
-  contentEl.value.style.setProperty("--lettering-icon-top", distance + "px");
+  letteringIcon.value.style.setProperty(
+    "--lettering-icon-top",
+    distance + "px"
+  );
 
   const scrambleText = new useScrambleText(textEl.value, {
     timeOffset: 1000,
@@ -185,19 +199,23 @@ onMounted(() => {
         translate3d(0, var(--text-transform-y, 0), 0);
       @include default-transitions(transform);
     }
-    :deep(.lettering-icon) {
-      height: 320px;
-      position: absolute;
-      top: var(--lettering-icon-top, 0);
-      left: 50%;
-      transform: translate3d(
-        -50%,
-        calc(-100px + var(--text-transform-y, 0px)),
-        0
-      );
-      opacity: var(--lettering-opacity, 0);
-      @include default-transitions(opacity);
-      transition-duration: 0.3;
+  }
+  .lettering-icon {
+    height: 320px;
+    position: fixed;
+    top: var(--lettering-icon-top, 0);
+    left: 50%;
+    transform: translate3d(-50%, calc(-100px + var(--text-transform-y, 0px)), 0)
+      scale(var(--lettering-icon-scale, 1));
+    z-index: 2;
+    opacity: var(--lettering-opacity, 0);
+    @include default-transitions(opacity);
+    transition-duration: 0.5s;
+    &.has-opacity {
+      --lettering-opacity: 0;
+      --lettering-icon-scale: 10;
+      transition: transform 2s ease-in-out, opacity 1s ease-in-out;
+      transition-delay: 0.45s;
     }
   }
 }

@@ -39,7 +39,6 @@ export const useCardsGallery = class App {
     this.instancedMesh = null;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(1, 1);
-    this.prevCameraZ = null;
 
     this.mDragging = false;
     this.mDown = false;
@@ -78,8 +77,7 @@ export const useCardsGallery = class App {
       100000
     );
 
-    this.camera.position.set(0, 0, 1);
-    this.prevCameraZ = this.camera.position.z;
+    this.camera.position.set(0, 0, 50);
 
     this.orbit = new MapControls(this.camera, this.renderer.domElement);
     this.orbit.enableDamping = true;
@@ -329,7 +327,7 @@ export const useCardsGallery = class App {
     this.scene.add(this.instancedMesh);
 
     this.instancedMesh.position.x = -0.5 * this.stringBox.wScene;
-    this.instancedMesh.position.y = -0.6 * this.stringBox.hScene;
+    this.instancedMesh.position.y = -0.3 * this.stringBox.hScene;
 
     this.instancedMesh.castShadow = true;
   }
@@ -417,7 +415,7 @@ export const useCardsGallery = class App {
 
     gsap.to(this.camera.position, {
       x: targetPoint.x,
-      y: startPosition.y,
+      y: targetZoom,
       z: targetZoom,
       duration: duration,
       ease: "power2.inOut",
