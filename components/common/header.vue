@@ -57,6 +57,10 @@ const textureStore = useTextureStore();
     border-radius: 8px;
     opacity: var(--play-video-opacity, 1);
     pointer-events: all;
+    &:hover {
+      --play-video-margin: 10px;
+      --play-button-stroke: var(--color-evex-blue);
+    }
 
     &::before {
       content: "";
@@ -76,11 +80,13 @@ const textureStore = useTextureStore();
       pointer-events: none;
     }
     .play-video-text {
+      margin-right: var(--play-video-margin, 0);
       line-height: 1;
       font-size: 21px;
       font-family: var(--font-ping-regular);
       white-space: nowrap;
       color: var(--color-white);
+      @include default-transitions(margin-right);
     }
     :deep(.nuxt-icon) {
       margin-left: 10px;
@@ -88,6 +94,10 @@ const textureStore = useTextureStore();
       @include size(42px);
       svg {
         @include size(100%);
+        path {
+          fill: var(--play-button-stroke, var(--color-white));
+          @include default-transitions(fill);
+        }
       }
     }
   }
