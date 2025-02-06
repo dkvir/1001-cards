@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-  modules: ["@pinia/nuxt", "nuxt-icons"],
+  modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt"],
   app: {
     head: {
       meta: [
