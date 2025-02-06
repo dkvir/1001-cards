@@ -4,9 +4,7 @@
 
 @mixin uppercase {
   text-transform: uppercase;
-  &:lang(ka) {
-    @include font-feature-settings("case");
-  }
+  @include font-feature-settings("case");
 }
 
 @mixin lowercase {
