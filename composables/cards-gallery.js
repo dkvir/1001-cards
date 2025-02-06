@@ -30,7 +30,6 @@ export const useCardsGallery = class App {
       wScene: 0,
       hTexture: 0,
       hScene: 0,
-      caretPosScene: [],
     };
     this.string = "1001";
     this.fontName = "evexweb-Regular";
@@ -170,20 +169,6 @@ export const useCardsGallery = class App {
     this.stringBox.wScene = this.stringBox.wTexture * this.fontScaleFactor;
     this.stringBox.hTexture = this.textInputEl.clientHeight;
     this.stringBox.hScene = this.stringBox.hTexture * this.fontScaleFactor;
-    this.stringBox.caretPosScene = getCaretCoordinates().map(
-      (c) => c * this.fontScaleFactor
-    );
-
-    function getCaretCoordinates() {
-      const range = window.getSelection().getRangeAt(0);
-      const rects = range.getClientRects();
-      if (rects[0]) {
-        return [rects[0].left, rects[0].top];
-      } else {
-        document.execCommand("selectAll", false, null);
-        return [0, 0];
-      }
-    }
   }
 
   refreshText() {
