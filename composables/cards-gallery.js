@@ -386,7 +386,7 @@ export const useCardsGallery = class App {
       setTimeout(() => {
         this.mDown = false;
         this.mDragging = false;
-      }, 500);
+      }, 250);
     });
   }
 
