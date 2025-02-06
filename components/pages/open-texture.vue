@@ -71,7 +71,7 @@
 		}
 		.close {
 			position: absolute;
-			top: 64px;
+			top: 75px;
 			right: 70px;
 			z-index: 4;
 			font-size: 30px;
