@@ -10,7 +10,6 @@
     >
       <nuxt-icon name="logo" filled />
     </div>
-    <h1 class="title uppercase">ტექსტი</h1>
     <a
       href="#"
       :class="[
