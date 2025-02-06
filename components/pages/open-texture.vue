@@ -9,7 +9,7 @@
 			<img v-if="imageLink" :src="imageLink" alt="image" class="img" />
 		</div>
 		<div @click="closeTexture" class="close">
-			<nuxt-icon name="cross" filled />
+			<nuxt-icon class="exit-icon" name="cross" filled />
 		</div>
 
 		<common-footer />
@@ -71,8 +71,9 @@
 		}
 		.close {
 			position: absolute;
-			top: 40px;
-			right: 64px;
+			top: 64px;
+			right: 70px;
+			z-index: 4;
 			font-size: 30px;
 			cursor: pointer;
 		}
