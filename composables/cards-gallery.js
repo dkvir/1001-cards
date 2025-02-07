@@ -89,6 +89,10 @@ export const useCardsGallery = class App {
     this.enableRotate = false;
     this.orbit.enableZoom = true;
 
+    if (window.innerWidth <= 1024) {
+      this.orbit.maxDistance = 70;
+    }
+
     this.orbit.mouseButtons = {
       LEFT: THREE.MOUSE.PAN,
       RIGHT: THREE.MOUSE.PAN,
