@@ -114,10 +114,16 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .loader {
+  --text-tranform-ratio: 1;
+
+  @media (max-width: 1024px) {
+    --text-tranform-ratio: 0.5;
+  }
+
   position: fixed;
   inset: 0;
   z-index: 5;
-  width: 100vw;
+  width: 100svw;
   height: 100dvh;
   &.is-loaded {
     pointer-events: none;
@@ -196,21 +202,47 @@ onMounted(() => {
       color: var(--color-white);
       font-family: var(--font-evex-regular);
       transform: scale(var(--text-scale, 1))
-        translate3d(0, var(--text-transform-y, 0), 0);
+        translate3d(
+          0,
+          calc(var(--text-transform-y, 0) * var(--text-tranform-ratio)),
+          0
+        );
       @include default-transitions(transform);
+      @media (min-width: 1025px) and (max-width: 1200px) {
+        font-size: css-clamp-vw(350px, 400px, 1200);
+      }
+
+      @media (min-width: 768px) and (max-width: 1024px) {
+        font-size: css-clamp-vw(300px, 350px, 1024);
+      }
     }
   }
-  .lettering-icon {
-    height: 320px;
+  :deep(.lettering-icon) {
     position: fixed;
     top: var(--lettering-icon-top, 0);
     left: 50%;
-    transform: translate3d(-50%, calc(-100px + var(--text-transform-y, 0px)), 0)
+    transform: translate3d(
+        -50%,
+        calc(
+          -100px + (var(--text-transform-y, 0) * var(--text-tranform-ratio))
+        ),
+        0
+      )
       scale(var(--lettering-icon-scale, 1));
     z-index: 2;
     opacity: var(--lettering-opacity, 0);
     @include default-transitions(opacity);
     transition-duration: 0.5s;
+    svg {
+      height: 320px;
+      width: auto;
+      @media (min-width: 1025px) and (max-width: 1200px) {
+        height: css-clamp-vw(210px, 260px, 1200);
+      }
+      @media (min-width: 768px) and (max-width: 1024px) {
+        height: css-clamp-vw(160px, 210px, 1024);
+      }
+    }
     &.has-opacity {
       --lettering-opacity: 0;
       --lettering-icon-scale: 10;

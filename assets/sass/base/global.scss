@@ -2,12 +2,15 @@ html,
 body {
   width: 100%;
   height: auto;
+  width: 100dvw;
+  height: 100dvh;
   min-height: 100svh;
   overscroll-behavior: none;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  overflow: hidden;
 }
 
 html {
