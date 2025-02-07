@@ -3,7 +3,7 @@
     <canvas
       :class="['canvas', { 'has-blur': textureStore.textureIndex !== null }]"
     ></canvas>
-    <div id="text-input" contenteditable="true" autofocus></div>
+    <div id="text-input" contenteditable="true"></div>
     <pages-open-texture />
   </div>
 </template>

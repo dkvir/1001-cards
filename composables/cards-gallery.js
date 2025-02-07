@@ -89,8 +89,10 @@ export const useCardsGallery = class App {
     this.enableRotate = false;
     this.orbit.enableZoom = true;
 
-    if (window.innerWidth <= 1024) {
+    if (window.innerWidth <= 1024 && window.innerWidth > 540) {
       this.orbit.maxDistance = 70;
+    } else if (window.innerWidth <= 540) {
+      this.orbit.maxDistance = 100;
     }
 
     this.orbit.mouseButtons = {
