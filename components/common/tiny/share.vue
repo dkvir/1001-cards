@@ -19,6 +19,11 @@ const textureStore = useTextureStore();
 
 const clickShare = () => {
   textureStore.toggleShare(!textureStore.isShareActive);
+
+  const shareUrl =
+    "https://www.facebook.com/sharer/sharer.php?u=horizontal-slider-chi.vercel.app/about";
+
+  window.open(shareUrl, "_blank");
 };
 </script>
 

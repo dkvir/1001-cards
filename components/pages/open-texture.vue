@@ -42,29 +42,6 @@ const closeTexture = () => {
   textureStore.changeTextureIndex(null);
   textureStore.toggleShare(false);
 };
-
-const image = computed(
-  () =>
-    `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`
-);
-const title = computed(() => `Photo #${route.query.imageId}`);
-const description = computed(
-  () => `Check out this amazing photo #${route.query.imageId}`
-);
-
-useHead({
-  title: title,
-  meta: [
-    { property: "og:title", content: title },
-    { property: "og:description", content: description },
-    { property: "og:image", content: image },
-    {
-      property: "og:url",
-      content: `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`,
-    },
-    { property: "og:type", content: "website" },
-  ],
-});
 </script>
 
 <style lang="scss" scoped>
