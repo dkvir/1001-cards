@@ -135,14 +135,21 @@
 				left: 50%;
 				transform: translate3d(-50%, 0, 0);
 				margin-bottom: 16px;
-				opacity: var(--qr-visible, 0);
-				@include default-transitions(opacity);
-				pointer-events: none;
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 0.3s ease, visibility 0.3s ease;
+				pointer-events: all;
 				font-family: var(--font-ping-regular);
 				color: var(--color-white);
 
 				&.is-visible {
-					--qr-visible: 1;
+					opacity: 1;
+					visibility: visible;
+				}
+
+				&.is-hidden {
+					display: none;
+					pointer-events: none;
 				}
 
 				.qr {

@@ -89,8 +89,10 @@ export const useCardsGallery = class App {
     this.enableRotate = false;
     this.orbit.enableZoom = true;
 
-    if (window.innerWidth <= 1024) {
+    if (window.innerWidth <= 1024 && window.innerWidth > 540) {
       this.orbit.maxDistance = 70;
+    } else if (window.innerWidth <= 540) {
+      this.orbit.maxDistance = 100;
     }
 
     this.orbit.mouseButtons = {
@@ -236,78 +238,96 @@ export const useCardsGallery = class App {
   }
 
   createInstancedMesh() {
-    // const textureLoader = new THREE.TextureLoader();
-
-    // // Load the texture
-    // const texture = textureLoader.load("/images/five/atlas_1.png");
-
+    // Ensure the texture is loaded and set filtering
     this.textureLoader.loadedTexture.magFilter = THREE.NearestFilter;
     this.textureLoader.loadedTexture.minFilter = THREE.NearestFilter;
 
-    // Shader material to handle UV mapping per instance
+    // Shader material to handle per-instance UV mapping
     const material = new THREE.ShaderMaterial({
       uniforms: {
         textureAtlas: { value: this.textureLoader.loadedTexture },
-        instanceOpacity: { value: 1.0 }, // Add opacity uniform for instance
+        instanceOpacity: { value: 1.0 },
       },
       vertexShader: `
-        attribute vec2 instanceUVOffset;  // UV offset for each instance
-        attribute float instanceOpacity;  // Opacity for each instance
+        attribute vec4 instanceUVOffset;  // x, y, width, height
+        attribute float instanceOpacity;
 
-        varying vec2 vUv;  // Varying UVs passed to the fragment shader
-        varying float vOpacity;  // Varying opacity passed to the fragment shader
+        varying vec2 vUv;
+        varying float vOpacity;
 
         void main() {
-          vUv = uv * vec2(0.0625) + instanceUVOffset;
-          vOpacity = instanceOpacity;  // Pass opacity value to fragment shader
-          gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-      uniform sampler2D textureAtlas;  // Texture atlas for instances
-      varying vec2 vUv;  // UV coordinates for each instance
-      varying float vOpacity;  // Opacity for each instance
+            // Correct UV transformation
+            vUv = vec2(
+                instanceUVOffset.x + uv.x * instanceUVOffset.z,
+                instanceUVOffset.y + uv.y * instanceUVOffset.w
+            );
+            
+            vOpacity = instanceOpacity;
 
-      void main() {
-        vec4 color = texture2D(textureAtlas, vUv);  // Get texture color
-        color.a *= vOpacity;  // Apply opacity to alpha channel
-        gl_FragColor = color;  // Final color with adjusted alpha
-      }
-      `,
+            gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+        }
+        `,
+      fragmentShader: `
+          uniform sampler2D textureAtlas;
+
+          varying vec2 vUv;
+          varying float vOpacity;
+
+          void main() {
+              vec4 color = texture2D(textureAtlas, vUv);
+
+              // Ensure transparency is applied
+              color.a *= vOpacity;
+
+              // Debugging: Highlight missing UVs with a color
+              if (color.a < 0.1) {
+                  color.rgb = vec3(1.0, 0.0, 0.0); // Red debug color
+              }
+
+              gl_FragColor = color;
+          }
+        `,
       transparent: true,
     });
 
+    // Plane geometry for instanced objects
     const geometry = new THREE.PlaneGeometry(
-      0.3 * (450 / 630),
-      0.25 * (630 / 450)
+      0.3 * (500 / 700),
+      0.25 * (700 / 500)
     );
 
     const instanceCount = this.particles.length;
-    const uvsLength = this.uvs.length; // Get total available UV mappings
-    const instanceUVOffsets = new Float32Array(instanceCount * 2); // 2D UV offset per instance
-
+    const uvsLength = this.uvs.length; // Total available UV mappings
+    const instanceUVData = new Float32Array(instanceCount * 4); // Store (x, y, width, height)
     const instanceOpacity = new Float32Array(instanceCount);
 
-    // Assign UV offsets, cycling through `this.uvs` using modulo
+    // Assign UV offsets and scales, cycling through `this.uvs` using modulo
     for (let i = 0; i < instanceCount; i++) {
-      instanceOpacity[i] = 1.0; // Set initial opacity to 1 (fully opaque)
+      instanceOpacity[i] = 1.0; // Fully opaque initially
 
       const uvIndex = i % uvsLength; // Wrap around if `i` exceeds `uvs.length`
-      instanceUVOffsets[i * 2] = this.uvs[uvIndex].x; // X offset in atlas
-      instanceUVOffsets[i * 2 + 1] = this.uvs[uvIndex].y; // Y offset in atlas
+      const uv = this.uvs[uvIndex];
+
+      // Store UV offset (x, y) and UV scale (width, height)
+      instanceUVData[i * 4] = uv.x;
+      instanceUVData[i * 4 + 1] = uv.y;
+      instanceUVData[i * 4 + 2] = uv.width;
+      instanceUVData[i * 4 + 3] = uv.height;
     }
 
+    // Set opacity as an instanced attribute
     geometry.setAttribute(
       "instanceOpacity",
       new THREE.InstancedBufferAttribute(instanceOpacity, 1)
     );
 
-    // Attach UV offsets as an instanced attribute
+    // Set UV offsets and scales as an instanced attribute
     geometry.setAttribute(
       "instanceUVOffset",
-      new THREE.InstancedBufferAttribute(instanceUVOffsets, 2)
+      new THREE.InstancedBufferAttribute(instanceUVData, 4)
     );
 
+    // Create instanced mesh
     this.instancedMesh = new THREE.InstancedMesh(
       geometry,
       material,
@@ -315,6 +335,7 @@ export const useCardsGallery = class App {
     );
     this.scene.add(this.instancedMesh);
 
+    // Position adjustments
     this.instancedMesh.position.x = -0.5 * this.stringBox.wScene;
     this.instancedMesh.position.y = -0.3 * this.stringBox.hScene;
 

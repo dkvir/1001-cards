@@ -119,6 +119,9 @@ onMounted(() => {
   @media (max-width: 1024px) {
     --text-tranform-ratio: 0.5;
   }
+  @media (max-width: 540px) {
+    --text-tranform-ratio: 0.2;
+  }
 
   position: fixed;
   inset: 0;
@@ -212,8 +215,14 @@ onMounted(() => {
         font-size: css-clamp-vw(350px, 400px, 1200);
       }
 
-      @media (min-width: 768px) and (max-width: 1024px) {
+      @media (min-width: 769px) and (max-width: 1024px) {
         font-size: css-clamp-vw(300px, 350px, 1024);
+      }
+      @media (min-width: 541px) and (max-width: 768px) {
+        font-size: css-clamp-vw(260px, 300px, 768);
+      }
+      @media (max-width: 540px) {
+        font-size: 130px;
       }
     }
   }
@@ -233,14 +242,29 @@ onMounted(() => {
     opacity: var(--lettering-opacity, 0);
     @include default-transitions(opacity);
     transition-duration: 0.5s;
+
+    @media (max-width: 540px) {
+      transform: translate3d(
+          -50%,
+          calc(-40px + var(--text-transform-y, 0) * var(--text-tranform-ratio)),
+          0
+        )
+        scale(var(--lettering-icon-scale, 1));
+    }
     svg {
       height: 320px;
       width: auto;
       @media (min-width: 1025px) and (max-width: 1200px) {
         height: css-clamp-vw(210px, 260px, 1200);
       }
-      @media (min-width: 768px) and (max-width: 1024px) {
+      @media (min-width: 769px) and (max-width: 1024px) {
         height: css-clamp-vw(160px, 210px, 1024);
+      }
+      @media (min-width: 541px) and (max-width: 768px) {
+        height: css-clamp-vw(150px, 160px, 768);
+      }
+      @media (max-width: 549px) {
+        height: 90px;
       }
     }
     &.has-opacity {
