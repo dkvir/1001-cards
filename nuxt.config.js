@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt"],
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.PUBLIC_SITE_URL,
+    },
+  },
   app: {
     head: {
       meta: [
@@ -18,11 +23,6 @@ export default defineNuxtConfig({
       ],
       // link: [...favicon.links],
       script: [{ src: "/js/InertiaPlugin.min.js" }],
-    },
-  },
-  runtimeConfig: {
-    public: {
-      siteUrl: process.env.PUBLIC_SITE_URL,
     },
   },
   css: ["@/assets/sass/style.scss"],
