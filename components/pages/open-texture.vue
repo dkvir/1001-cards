@@ -32,7 +32,7 @@ watch(
 
       imageLink.value = `/images/1001-back/${currId}.png`;
 
-      router.replace({
+      router.push({
         path: route.path,
         query: {
           imageId: currId,
@@ -41,7 +41,7 @@ watch(
 
       changeSeo(currId);
     } else {
-      router.replace({
+      router.push({
         path: route.path,
         query: {},
       });
