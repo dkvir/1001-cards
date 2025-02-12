@@ -80,6 +80,14 @@ const changeSeo = (imageId) => {
             : config.public.siteUrl + "images/share-image.png";
         },
       },
+      {
+        name: "og:image:width",
+        content: "1200",
+      },
+      {
+        name: "og:image:height",
+        content: "630",
+      },
       { name: "og:image:alt", content: "თავს მოუარე!" }, // Optionally, add an alt tag for accessibility
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "ევექსი" },
