@@ -22,17 +22,43 @@ const textureStore = useTextureStore();
 const router = useRouter();
 const route = useRoute();
 const imageLink = ref(null);
+const config = useRuntimeConfig();
 
 watch(
   () => textureStore.textureIndex,
   (curr) => {
     if (curr) {
-      imageLink.value = `/images/1001-back/${(curr % 40) + 1}.png`;
-      router.replace({
-        path: route.path,
-        query: {
-          imageId: (curr % 40) + 1,
-        },
+      let currId = (curr % 40) + 1;
+
+      imageLink.value = `/images/1001-back/${currId}.png`;
+      // router.replace({
+      //   path: route.path,
+      //   query: {
+      //     imageId: currId,
+      //   },
+      // });
+      useHead({
+        titleTemplate: "მიზეზი " + currId,
+        meta: [
+          {
+            name: "description",
+            content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+            ogImage: config.public.siteUrl + `images/1001-back/${currId}.png`,
+            twitterImage: imageLink.value,
+          },
+        ],
+      });
+    } else {
+      useHead({
+        titleTemplate: "ევექსი",
+        meta: [
+          {
+            name: "description",
+            content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+            ogImage: config.public.siteUrl + "images/share-image.png",
+            twitterImage: "/images/share-image.png",
+          },
+        ],
       });
     }
   }
