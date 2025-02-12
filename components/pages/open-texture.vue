@@ -31,52 +31,21 @@ watch(
       let currId = (curr % 40) + 1;
 
       imageLink.value = `/images/1001-back/${currId}.png`;
-      useHead({
-        titleTemplate: "მიზეზი " + currId,
-        meta: [
-          {
-            name: "description",
-            content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-          },
-        ],
+
+      router.replace({
+        path: route.path,
+        query: {
+          imageId: currId,
+        },
       });
 
-      useSeoMeta({
-        ogImage: imageLink.value,
-        ogTitle: "ევექსი",
-        description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        ogDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        ogUrl: config.public.siteUrl + route.fullPath,
-        ogImage: config.public.siteUrl + imageLink.value,
-        twitterCard: "summary_large_image",
-        twitterSite: config.public.siteUrl + route.fullPath,
-        twitterTitle: "ევექსი",
-        twitterDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        twitterImage: imageLink.value,
-      });
+      changeSeo(currId);
     } else {
-      useHead({
-        titleTemplate: "ევექსი",
-        meta: [
-          {
-            name: "description",
-            content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-          },
-        ],
+      router.replace({
+        path: route.path,
+        query: {},
       });
-      useSeoMeta({
-        ogImage: "/images/share-image.png",
-        ogTitle: "ევექსი",
-        description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        ogDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        ogUrl: config.public.siteUrl + route.fullPath,
-        ogImage: config.public.siteUrl + "images/share-image.png",
-        twitterCard: "summary_large_image",
-        twitterSite: config.public.siteUrl + route.fullPath,
-        twitterTitle: "ევექსი",
-        twitterDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-        twitterImage: "/images/share-image.png",
-      });
+      changeSeo();
     }
   }
 );
@@ -84,6 +53,54 @@ watch(
 const closeTexture = () => {
   textureStore.changeTextureIndex(null);
   textureStore.toggleShare(false);
+};
+
+const changeSeo = (imageId) => {
+  useHead({
+    titleTemplate: () => {
+      return imageId ? `მიზეზი ${imageId}` : "ევექსი";
+    },
+    meta: [
+      { name: "og:title", content: "ევექსი" },
+      {
+        name: "og:description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+      {
+        name: "og:url",
+        content: () => {
+          return config.public.siteUrl + route.fullPath;
+        },
+      },
+      {
+        name: "og:image",
+        content: () => {
+          return imageId
+            ? config.public.siteUrl + `/images/1001-back/${imageId}.png`
+            : config.public.siteUrl + "images/share-image.png";
+        },
+      },
+      { name: "og:image:alt", content: "თავს მოუარე!" }, // Optionally, add an alt tag for accessibility
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ევექსი" },
+      {
+        name: "twitter:description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+      {
+        name: "twitter:image",
+        content: () => {
+          return imageId
+            ? `/images/1001-back/${imageId}.png`
+            : "/images/share-image.png";
+        },
+      },
+      {
+        name: "description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+    ],
+  });
 };
 </script>
 
