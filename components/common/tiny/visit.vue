@@ -32,7 +32,6 @@ const textureStore = useTextureStore();
   border-radius: 8px;
   color: var(--visit-color, var(--color-white));
   padding: 5px;
-  margin-left: auto;
   pointer-events: all;
 
   &::before {

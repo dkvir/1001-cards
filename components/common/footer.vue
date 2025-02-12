@@ -2,7 +2,7 @@
   <div
     ref="target"
     :class="[
-      'footer flex-center',
+      'footer flex-center justify-between',
       { 'is-invisible': textureStore.textureIndex == null },
     ]"
   >
@@ -21,16 +21,16 @@ const textureStore = useTextureStore();
 <style lang="scss" scoped>
 .footer {
   position: fixed;
+  left: 0;
   bottom: 50px;
-  left: 64px;
-  right: 64px;
   z-index: 3;
+  padding: 0 64px;
+  width: 100%;
   font-family: var(--font-ping-regular);
   pointer-events: none;
 
   .take-care {
     position: relative;
-    margin-right: get-vw(553px);
     padding: 18px 16px;
     border-radius: 8px;
 
