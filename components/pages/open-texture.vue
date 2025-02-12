@@ -31,22 +31,28 @@ watch(
       let currId = (curr % 40) + 1;
 
       imageLink.value = `/images/1001-back/${currId}.png`;
-      // router.replace({
-      //   path: route.path,
-      //   query: {
-      //     imageId: currId,
-      //   },
-      // });
       useHead({
         titleTemplate: "მიზეზი " + currId,
         meta: [
           {
             name: "description",
             content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-            ogImage: config.public.siteUrl + `images/1001-back/${currId}.png`,
-            twitterImage: imageLink.value,
           },
         ],
+      });
+
+      useSeoMeta({
+        ogImage: imageLink.value,
+        ogTitle: "ევექსი",
+        description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        ogDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        ogUrl: config.public.siteUrl + route.fullPath,
+        ogImage: config.public.siteUrl + imageLink.value,
+        twitterCard: "summary_large_image",
+        twitterSite: config.public.siteUrl + route.fullPath,
+        twitterTitle: "ევექსი",
+        twitterDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        twitterImage: imageLink.value,
       });
     } else {
       useHead({
@@ -55,10 +61,21 @@ watch(
           {
             name: "description",
             content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
-            ogImage: config.public.siteUrl + "images/share-image.png",
-            twitterImage: "/images/share-image.png",
           },
         ],
+      });
+      useSeoMeta({
+        ogImage: "/images/share-image.png",
+        ogTitle: "ევექსი",
+        description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        ogDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        ogUrl: config.public.siteUrl + route.fullPath,
+        ogImage: config.public.siteUrl + "images/share-image.png",
+        twitterCard: "summary_large_image",
+        twitterSite: config.public.siteUrl + route.fullPath,
+        twitterTitle: "ევექსი",
+        twitterDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+        twitterImage: "/images/share-image.png",
       });
     }
   }

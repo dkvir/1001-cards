@@ -21,7 +21,7 @@ useHead({
   ],
 });
 
-useServerSeoMeta({
+useSeoMeta({
   ogImage: "/images/share-image.png",
   ogTitle: "ევექსი",
   description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
