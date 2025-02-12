@@ -33,6 +33,7 @@ watch(
 
 onMounted(() => {
   const imageUrls = [
+    "/images/five/atlas.png",
     "/images/five/atlas_1.png",
     "/images/five/atlas_2.png",
     "/images/five/atlas_1.png",
