@@ -38,6 +38,32 @@ watch(
   }
 );
 
+const image = computed(
+  () =>
+    `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`
+);
+
+const description = computed(
+  () => `Check out this amazing photo #${route.query.imageId}`
+);
+
+useHead({
+  title: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს",
+  meta: [
+    {
+      property: "og:title",
+      content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს",
+    },
+    { property: "og:description", content: description },
+    { property: "og:image", content: image },
+    {
+      property: "og:url",
+      content: `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`,
+    },
+    { property: "og:type", content: "website" },
+  ],
+});
+
 const closeTexture = () => {
   textureStore.changeTextureIndex(null);
   textureStore.toggleShare(false);
