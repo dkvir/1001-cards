@@ -20,6 +20,11 @@ export default defineNuxtConfig({
       script: [{ src: "/js/InertiaPlugin.min.js" }],
     },
   },
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.PUBLIC_SITE_URL,
+    },
+  },
   css: ["@/assets/sass/style.scss"],
   vite: {
     css: {
