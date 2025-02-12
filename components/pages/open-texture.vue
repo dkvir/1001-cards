@@ -46,6 +46,9 @@ watch(
         query: {},
       });
       changeSeo();
+      setTimeout(() => {
+        imageLink.value = null;
+      }, 100);
     }
   }
 );
