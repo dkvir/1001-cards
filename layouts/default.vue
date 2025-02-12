@@ -27,7 +27,7 @@ useServerSeoMeta({
   description: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
   ogDescription: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
   ogUrl: config.public.siteUrl + route.fullPath,
-  ogImage: "https://horizontal-slider-chi.vercel.app/images/share-image.png", // change this line
+  ogImage: config.public.siteUrl + "/images/share-image.png",
   twitterCard: "summary_large_image",
   twitterSite: config.public.siteUrl + route.fullPath,
   twitterTitle: "ევექსი",
