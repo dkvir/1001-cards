@@ -20,7 +20,9 @@ const textureStore = useTextureStore();
 const clickShare = () => {
   textureStore.toggleShare(!textureStore.isShareActive);
 
-  window.open(window.location.href, "_blank");
+  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`;
+
+  window.open(shareUrl, "_blank");
 };
 </script>
 
