@@ -79,7 +79,7 @@ const changeSeo = (imageId) => {
         name: "og:image",
         content: () => {
           return imageId
-            ? config.public.siteUrl + `/images/1001-back/${imageId}.png`
+            ? config.public.siteUrl + `/images/1001-back-120/${imageId}.png`
             : config.public.siteUrl + "images/share-image.png";
         },
       },
@@ -102,7 +102,7 @@ const changeSeo = (imageId) => {
         name: "twitter:image",
         content: () => {
           return imageId
-            ? `/images/1001-back/${imageId}.png`
+            ? `/images/1001-back-120/${imageId}.png`
             : "/images/share-image.png";
         },
       },
