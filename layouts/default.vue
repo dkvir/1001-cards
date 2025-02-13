@@ -34,7 +34,7 @@ const changeSeo = (imageId) => {
         name: "og:image",
         content: () => {
           return imageId
-            ? siteUrl + `/images/1001-back/${imageId}.webp`
+            ? siteUrl + `/images/1001-back-120/${imageId}.webp`
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -49,7 +49,7 @@ const changeSeo = (imageId) => {
         name: "twitter:image",
         content: () => {
           return imageId
-            ? `/images/1001-back/${imageId}.webp`
+            ? `/images/1001-back-120/${imageId}.webp`
             : "/images/share-image.webp";
         },
       },
