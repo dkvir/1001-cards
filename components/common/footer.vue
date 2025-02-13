@@ -43,6 +43,10 @@ const textureStore = useTextureStore();
       @include default-transitions(opacity);
     }
 
+    @media (max-width: 768px) {
+      display: none;
+    }
+
     &::before {
       position: absolute;
       content: "";
