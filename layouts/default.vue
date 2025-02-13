@@ -33,7 +33,7 @@ const changeSeo = (imageId) => {
         content: () => {
           return imageId
             ? config.public.siteUrl + `/images/1001-back/${imageId}.webp`
-            : config.public.siteUrl + "images/share-image.png";
+            : config.public.siteUrl + "/images/share-image.png";
         },
       },
       {
