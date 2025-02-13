@@ -38,8 +38,9 @@ const textureStore = useTextureStore();
     padding: 18px 16px;
     border-radius: 8px;
 
-    @media (max-width: 768px) {
-      display: none;
+    @media (max-width: 1024px) {
+      opacity: var(--visit-opacity, 0);
+      @include default-transitions(opacity);
     }
 
     &::before {
@@ -58,6 +59,7 @@ const textureStore = useTextureStore();
 
     @include parent-state(".is-invisible") {
       --take-care-bg: var(--color-evex-gray);
+      --visit-opacity: 1;
     }
   }
 }

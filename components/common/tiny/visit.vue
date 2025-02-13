@@ -34,7 +34,13 @@ const textureStore = useTextureStore();
   padding: 5px;
   pointer-events: all;
 
-  @media (max-width: 700px) {
+  @media (max-width: 1024px) {
+    opacity: var(--visit-opacity, 0);
+    pointer-events: none;
+    @include default-transitions(opacity);
+  }
+
+  @media (max-width: 768px) {
     position: relative;
     width: 100%;
     left: 0;
@@ -58,6 +64,10 @@ const textureStore = useTextureStore();
   &.is-invisible {
     --visit-color: var(--color-evex-gray);
     --visit-bg: var(--color-evex-gray);
+
+    @media (max-width: 1024px) {
+      --visit-opacity: 1;
+    }
   }
 
   .visit-link {

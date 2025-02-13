@@ -32,7 +32,7 @@ const clickShare = () => {
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
-  padding: 20px 16px;
+  padding: 16px 20px;
   border-radius: 8px;
   background-color: var(--share-hover-bg-color, var(--color-eleonor));
   color: var(--share-hover-color, var(--color-black));
@@ -41,6 +41,10 @@ const clickShare = () => {
   pointer-events: all;
   cursor: pointer;
   @include default-transitions(background-color, color, border);
+
+  @media (max-width: 540px) {
+    width: css-clamp-vw(287px, 450px, 540);
+  }
 
   &.is-invisible {
     --share-opacity: 0;

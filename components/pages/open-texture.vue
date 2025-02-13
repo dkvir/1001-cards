@@ -135,6 +135,12 @@ const changeSeo = (imageId) => {
     height: 630px;
     background-color: var(--color-white);
     border-radius: 15px;
+
+    @media (max-width: 540px) {
+      width: css-clamp-vw(287px, 450px, 540);
+      height: css-clamp-vw(400px, 630px, 540);
+    }
+
     .img {
       @include size(100%);
       object-fit: cover;
@@ -152,6 +158,11 @@ const changeSeo = (imageId) => {
     @include size(55px);
     @include default-transitions(background-color);
     border-radius: 8px;
+
+    @media (max-width: 768px) {
+      @include size(css-clamp(20px, 55px, 748));
+    }
+
     &:hover {
       --close-bg: var(--color-yellow);
       --icon-stroke: var(--color-black);
