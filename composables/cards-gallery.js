@@ -276,13 +276,11 @@ export const useCardsGallery = class App {
           void main() {
               vec4 color = texture2D(textureAtlas, vUv);
 
-              // Ensure transparency is applied
-              color.a *= vOpacity;
+              // Completely remove transparent pixels
+              if (color.a < 0.1) discard;
 
-              // Debugging: Highlight missing UVs with a color
-              if (color.a < 0.1) {
-                  color.rgb = vec3(1.0, 0.0, 0.0); // Red debug color
-              }
+              // Apply instance opacity
+              color.a *= vOpacity;
 
               gl_FragColor = color;
           }
