@@ -85,7 +85,7 @@ const changeSeo = (imageId) => {
         content: () => {
           return imageId
             ? siteUrl + `/images/1001-back-120/${imageId}.webp`
-            : siteUrl + "/images/share-image.png";
+            : siteUrl + "/images/share-image.webp";
         },
       },
       { name: "og:image:alt", content: "თავს მოუარე!" }, // Optionally, add an alt tag for accessibility
@@ -100,7 +100,7 @@ const changeSeo = (imageId) => {
         content: () => {
           return imageId
             ? `/images/1001-back-120/${imageId}.webp`
-            : "/images/share-image.png";
+            : "/images/share-image.webp";
         },
       },
       {
