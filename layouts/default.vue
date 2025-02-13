@@ -10,6 +10,8 @@
 <script setup>
 const config = useRuntimeConfig();
 const route = useRoute();
+const siteUrl =
+  config.public.siteUrl ?? "https://horizontal-slider-chi.vercel.app";
 
 const changeSeo = (imageId) => {
   useHead({
@@ -25,24 +27,16 @@ const changeSeo = (imageId) => {
       {
         name: "og:url",
         content: () => {
-          return config.public.siteUrl;
+          return siteUrl + route.fullPath;
         },
       },
       {
         name: "og:image",
         content: () => {
           return imageId
-            ? config.public.siteUrl + `/images/1001-back/${imageId}.webp`
-            : config.public.siteUrl + "/images/share-image.png";
+            ? siteUrl + `/images/1001-back/${imageId}.webp`
+            : siteUrl + "/images/share-image.png";
         },
-      },
-      {
-        name: "og:image:width",
-        content: "1200",
-      },
-      {
-        name: "og:image:height",
-        content: "630",
       },
       { name: "og:image:alt", content: "თავს მოუარე!" },
       { name: "twitter:card", content: "summary_large_image" },

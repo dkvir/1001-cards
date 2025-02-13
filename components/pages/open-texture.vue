@@ -24,6 +24,11 @@ const route = useRoute();
 const imageLink = ref(null);
 const config = useRuntimeConfig();
 
+const siteUrl =
+  config.public.siteUrl ?? "https://horizontal-slider-chi.vercel.app";
+
+console.log(siteUrl);
+
 watch(
   () => textureStore.textureIndex,
   (curr) => {
@@ -72,24 +77,16 @@ const changeSeo = (imageId) => {
       {
         name: "og:url",
         content: () => {
-          return config.public.siteUrl;
+          return siteUrl + route.fullPath;
         },
       },
       {
         name: "og:image",
         content: () => {
           return imageId
-            ? config.public.siteUrl + `/images/1001-back-120/${imageId}.webp`
-            : config.public.siteUrl + "/images/share-image.png";
+            ? siteUrl + `/images/1001-back-120/${imageId}.webp`
+            : siteUrl + "/images/share-image.png";
         },
-      },
-      {
-        name: "og:image:width",
-        content: "1200",
-      },
-      {
-        name: "og:image:height",
-        content: "630",
       },
       { name: "og:image:alt", content: "თავს მოუარე!" }, // Optionally, add an alt tag for accessibility
       { name: "twitter:card", content: "summary_large_image" },
