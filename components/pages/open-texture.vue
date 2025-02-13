@@ -22,51 +22,96 @@ const textureStore = useTextureStore();
 const router = useRouter();
 const route = useRoute();
 const imageLink = ref(null);
+const config = useRuntimeConfig();
 
 watch(
   () => textureStore.textureIndex,
   (curr) => {
     if (curr) {
-      imageLink.value = `/images/1001-back/${(curr % 40) + 1}.png`;
-      router.replace({
+      let currId = (curr % 40) + 1;
+
+      imageLink.value = `/images/1001-back/${currId}.png`;
+
+      router.push({
         path: route.path,
         query: {
-          imageId: (curr % 40) + 1,
+          imageId: currId,
         },
       });
+
+      changeSeo(currId);
+    } else {
+      router.push({
+        path: route.path,
+        query: {},
+      });
+      changeSeo();
+      setTimeout(() => {
+        imageLink.value = null;
+      }, 500);
     }
   }
 );
 
-const image = computed(
-  () =>
-    `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`
-);
-
-const description = computed(
-  () => `Check out this amazing photo #${route.query.imageId}`
-);
-
-useHead({
-  title: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს",
-  meta: [
-    {
-      property: "og:title",
-      content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს",
-    },
-    { property: "og:description", content: description },
-    { property: "og:image", content: image },
-    {
-      property: "og:url",
-      content: `https://horizontal-slider-chi.vercel.app/images/1001-back/${route.query.imageId}.png`,
-    },
-    { property: "og:type", content: "website" },
-  ],
-});
-
 const closeTexture = () => {
   textureStore.changeTextureIndex(null);
   textureStore.toggleShare(false);
+};
+
+const changeSeo = (imageId) => {
+  useHead({
+    titleTemplate: () => {
+      return imageId ? `მიზეზი ${imageId}` : "ევექსი";
+    },
+    meta: [
+      { name: "og:title", content: "ევექსი" },
+      {
+        name: "og:description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+      {
+        name: "og:url",
+        content: () => {
+          return config.public.siteUrl + route.fullPath;
+        },
+      },
+      {
+        name: "og:image",
+        content: () => {
+          return imageId
+            ? config.public.siteUrl + `/images/1001-back/${imageId}.png`
+            : config.public.siteUrl + "images/share-image.png";
+        },
+      },
+      {
+        name: "og:image:width",
+        content: "1200",
+      },
+      {
+        name: "og:image:height",
+        content: "630",
+      },
+      { name: "og:image:alt", content: "თავს მოუარე!" }, // Optionally, add an alt tag for accessibility
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ევექსი" },
+      {
+        name: "twitter:description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+      {
+        name: "twitter:image",
+        content: () => {
+          return imageId
+            ? `/images/1001-back/${imageId}.png`
+            : "/images/share-image.png";
+        },
+      },
+      {
+        name: "description",
+        content: "1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.",
+      },
+    ],
+  });
 };
 </script>
 

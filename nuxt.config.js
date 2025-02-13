@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt"],
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.PUBLIC_SITE_URL,
+    },
+  },
   app: {
     head: {
       meta: [

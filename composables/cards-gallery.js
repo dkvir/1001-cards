@@ -261,7 +261,7 @@ export const useCardsGallery = class App {
                 instanceUVOffset.x + uv.x * instanceUVOffset.z,
                 instanceUVOffset.y + uv.y * instanceUVOffset.w
             );
-            
+
             vOpacity = instanceOpacity;
 
             gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
@@ -292,7 +292,7 @@ export const useCardsGallery = class App {
 
     // Plane geometry for instanced objects
     const geometry = new THREE.PlaneGeometry(
-      0.3 * (500 / 700),
+      0.35 * (500 / 700),
       0.25 * (700 / 500)
     );
 
