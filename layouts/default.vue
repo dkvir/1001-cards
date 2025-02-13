@@ -25,7 +25,7 @@ const changeSeo = (imageId) => {
       {
         name: "og:url",
         content: () => {
-          return config.public.siteUrl + route.fullPath;
+          return config.public.siteUrl;
         },
       },
       {
