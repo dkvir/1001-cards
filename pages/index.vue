@@ -32,7 +32,7 @@ watch(
 );
 
 onMounted(() => {
-  const atlasUrls = ["/images/atlas-120.png"];
+  const atlasUrls = ["/images/atlas-120.webp"];
 
   textureLoadStore.preloadTexture(atlasUrls[0]);
 });
