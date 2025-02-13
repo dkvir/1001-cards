@@ -32,19 +32,14 @@ watch(
 );
 
 onMounted(() => {
-  const imageUrls = [
-    "/images/five/atlas.png",
-    "/images/five/atlas_1.png",
-    "/images/five/atlas_2.png",
-    "/images/five/atlas_1.png",
-    "/images/five/atlas_4.png",
-  ];
+  const atlasUrls = ["/images/atlas.png"];
 
-  const getRandomImage = () =>
-    imageUrls[Math.floor(Math.random() * imageUrls.length)];
-
-  textureLoadStore.preloadTexture(imageUrls[0]);
+  textureLoadStore.preloadTexture(atlasUrls[0]);
 });
+
+function getRandomAtlas(arr) {
+  arr[Math.floor(Math.random() * arr.length)];
+}
 </script>
 
 <style lang="scss" scoped>
