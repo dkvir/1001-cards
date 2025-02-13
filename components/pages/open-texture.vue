@@ -98,8 +98,8 @@ const closeTexture = () => {
   }
   .close {
     position: absolute;
-    top: 64px;
-    right: 64px;
+    top: var(--page-offset-padding);
+    right: var(--page-offset-padding);
     z-index: 4;
     font-size: 30px;
     cursor: pointer;

@@ -14,12 +14,12 @@
     --layout-grid-#{$size}-px: #{$i * $square-size};
   }
 
-  --selection-fill: var(--color-monza);
+  --selection-fill: var(--color-yellow);
   --selection-color: var(--color-white);
 
-  --page-offset-padding: 64px;
+  --page-offset-padding: #{css-clamp(32px, 64px)};
   --app-header-height: 96px;
-  @include mq(max-width 1366px) {
+  @include mq(max-width 1024px) {
     --page-offset-padding: 32px;
   }
   @include mq(max-width 1024px) {
