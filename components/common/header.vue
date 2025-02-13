@@ -66,8 +66,10 @@ const textureStore = useTextureStore();
       @media (max-width: 768px) {
         height: css-clamp-vw(16px, 32px, 768);
       }
+
       svg {
-        @include size(100%);
+        height: 100%;
+        width: auto;
       }
     }
   }

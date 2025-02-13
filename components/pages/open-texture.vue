@@ -160,7 +160,8 @@ const changeSeo = (imageId) => {
     border-radius: 8px;
 
     @media (max-width: 768px) {
-      @include size(css-clamp(20px, 55px, 748));
+      @include size(css-clamp-vw(32px, 55px, 768));
+      top: calc(var(--page-offset-padding) + var(--page-offset-padding) / 2);
     }
 
     &:hover {
