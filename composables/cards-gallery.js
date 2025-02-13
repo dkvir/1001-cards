@@ -42,6 +42,13 @@ export const useCardsGallery = class App {
     this.mDragging = false;
     this.mDown = false;
 
+    // Add properties for scale animation
+    this.hoveredInstanceId = null;
+    this.baseScale = 1.0;
+    this.hoverScale = 1.2;
+    this.scaleAnimations = new Map(); // Store active animations
+    this.instanceScales = new Map(); // Store current scales
+
     this.uvs = useUvCoordinates();
 
     this.createScene();
@@ -153,19 +160,26 @@ export const useCardsGallery = class App {
 
       if (this.textureStore.textureIndex !== null) return;
 
-      const instanceOpacity =
-        this.instancedMesh.geometry.attributes.instanceOpacity.array;
-      for (let i = 0; i < instanceOpacity.length; i++) {
-        instanceOpacity[i] = 1.0; // Set opacity to 1 (fully opaque) for all instances
-      }
-
+      // Handle hover state changes
       if (intersection.length > 0) {
         const instanceId = intersection[0].instanceId;
-        instanceOpacity[instanceId] = 0.8;
-        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
-      } else {
-        this.instancedMesh.geometry.attributes.instanceOpacity.needsUpdate = true;
+        if (this.hoveredInstanceId !== instanceId) {
+          // Reset previous hover if exists
+          if (this.hoveredInstanceId !== null) {
+            this.animateScale(this.hoveredInstanceId, this.baseScale);
+          }
+          // Set new hover
+          this.hoveredInstanceId = instanceId;
+          this.animateScale(instanceId, this.hoverScale);
+        }
+      } else if (this.hoveredInstanceId !== null) {
+        // Reset hover when no intersection
+        this.animateScale(this.hoveredInstanceId, this.baseScale);
+        this.hoveredInstanceId = null;
       }
+
+      // Update all instance matrices that have active animations
+      this.updateAnimatedInstances();
       this.orbit.update();
     });
   }
@@ -246,86 +260,62 @@ export const useCardsGallery = class App {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         textureAtlas: { value: this.textureLoader.loadedTexture },
-        instanceOpacity: { value: 1.0 },
       },
       vertexShader: `
         attribute vec4 instanceUVOffset;  // x, y, width, height
-        attribute float instanceOpacity;
 
         varying vec2 vUv;
-        varying float vOpacity;
 
         void main() {
-            // Correct UV transformation
             vUv = vec2(
                 instanceUVOffset.x + uv.x * instanceUVOffset.z,
                 instanceUVOffset.y + uv.y * instanceUVOffset.w
             );
 
-            vOpacity = instanceOpacity;
-
             gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
         }
-        `,
+      `,
       fragmentShader: `
-          uniform sampler2D textureAtlas;
+        uniform sampler2D textureAtlas;
 
-          varying vec2 vUv;
-          varying float vOpacity;
+        varying vec2 vUv;
 
-          void main() {
-              vec4 color = texture2D(textureAtlas, vUv);
+        void main() {
+            vec4 color = texture2D(textureAtlas, vUv);
 
-              // Completely remove transparent pixels
-              if (color.a < 0.1) discard;
+            // Completely remove transparent pixels
+            if (color.a < 0.1) discard;
 
-              // Apply instance opacity
-              color.a *= vOpacity;
-
-              gl_FragColor = color;
-          }
-        `,
+            gl_FragColor = color;
+        }
+      `,
       transparent: true,
     });
 
-    // Plane geometry for instanced objects
     const geometry = new THREE.PlaneGeometry(
       0.35 * (500 / 700),
       0.25 * (700 / 500)
     );
 
     const instanceCount = this.particles.length;
-    const uvsLength = this.uvs.length; // Total available UV mappings
-    const instanceUVData = new Float32Array(instanceCount * 4); // Store (x, y, width, height)
-    const instanceOpacity = new Float32Array(instanceCount);
+    const uvsLength = this.uvs.length;
+    const instanceUVData = new Float32Array(instanceCount * 4);
 
-    // Assign UV offsets and scales, cycling through `this.uvs` using modulo
     for (let i = 0; i < instanceCount; i++) {
-      instanceOpacity[i] = 1.0; // Fully opaque initially
-
-      const uvIndex = i % uvsLength; // Wrap around if `i` exceeds `uvs.length`
+      const uvIndex = i % uvsLength;
       const uv = this.uvs[uvIndex];
 
-      // Store UV offset (x, y) and UV scale (width, height)
       instanceUVData[i * 4] = uv.x;
       instanceUVData[i * 4 + 1] = uv.y;
       instanceUVData[i * 4 + 2] = uv.width;
       instanceUVData[i * 4 + 3] = uv.height;
     }
 
-    // Set opacity as an instanced attribute
-    geometry.setAttribute(
-      "instanceOpacity",
-      new THREE.InstancedBufferAttribute(instanceOpacity, 1)
-    );
-
-    // Set UV offsets and scales as an instanced attribute
     geometry.setAttribute(
       "instanceUVOffset",
       new THREE.InstancedBufferAttribute(instanceUVData, 4)
     );
 
-    // Create instanced mesh
     this.instancedMesh = new THREE.InstancedMesh(
       geometry,
       material,
@@ -333,7 +323,6 @@ export const useCardsGallery = class App {
     );
     this.scene.add(this.instancedMesh);
 
-    // Position adjustments
     this.instancedMesh.position.x = -0.5 * this.stringBox.wScene;
     this.instancedMesh.position.y = -0.3 * this.stringBox.hScene;
 
@@ -350,6 +339,60 @@ export const useCardsGallery = class App {
       idx++;
     });
     this.instancedMesh.instanceMatrix.needsUpdate = true;
+  }
+  updateAnimatedInstances() {
+    this.instanceScales.forEach((scale, instanceId) => {
+      const matrix = new THREE.Matrix4();
+      this.instancedMesh.getMatrixAt(instanceId, matrix);
+
+      // Extract position from the matrix
+      const position = new THREE.Vector3();
+      position.setFromMatrixPosition(matrix);
+
+      // Update matrix with current scale
+      this.dummy.position.copy(position);
+      this.dummy.scale.set(scale, scale, scale);
+      this.dummy.updateMatrix();
+
+      // Set the updated matrix
+      this.instancedMesh.setMatrixAt(instanceId, this.dummy.matrix);
+    });
+
+    if (this.instanceScales.size > 0) {
+      this.instancedMesh.instanceMatrix.needsUpdate = true;
+    }
+  }
+
+  animateScale(instanceId, targetScale) {
+    // Kill any existing animation for this instance
+    if (this.scaleAnimations.has(instanceId)) {
+      this.scaleAnimations.get(instanceId).kill();
+    }
+
+    // Get current scale or use base scale if not set
+    const currentScale = this.instanceScales.get(instanceId) || this.baseScale;
+
+    // Create animation object to track progress
+    const scaleObj = { scale: currentScale };
+
+    // Create new GSAP animation
+    const animation = gsap.to(scaleObj, {
+      scale: targetScale,
+      duration: 0.3,
+      ease: "power2.out",
+      onUpdate: () => {
+        this.instanceScales.set(instanceId, scaleObj.scale);
+      },
+      onComplete: () => {
+        this.scaleAnimations.delete(instanceId);
+        if (scaleObj.scale === this.baseScale) {
+          this.instanceScales.delete(instanceId);
+        }
+      },
+    });
+
+    // Store the animation
+    this.scaleAnimations.set(instanceId, animation);
   }
 
   makeTextFitScreen() {
