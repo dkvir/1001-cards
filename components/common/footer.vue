@@ -22,17 +22,25 @@ const textureStore = useTextureStore();
 .footer {
   position: fixed;
   left: 0;
-  bottom: 50px;
+  bottom: css-clamp(32px, 50px);
   z-index: 3;
-  padding: 0 64px;
+  padding: 0 var(--page-offset-padding);
   width: 100%;
   font-family: var(--font-ping-regular);
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 
   .take-care {
     position: relative;
     padding: 18px 16px;
     border-radius: 8px;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
 
     &::before {
       position: absolute;

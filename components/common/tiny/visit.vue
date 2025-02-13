@@ -34,6 +34,14 @@ const textureStore = useTextureStore();
   padding: 5px;
   pointer-events: all;
 
+  @media (max-width: 700px) {
+    position: relative;
+    width: 100%;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
   &::before {
     content: "";
     position: absolute;
@@ -53,7 +61,7 @@ const textureStore = useTextureStore();
   }
 
   .visit-link {
-    font-size: 20px;
+    font-size: css-clamp(16px, 20px);
     font-family: var(--font-ping-regular);
     background-color: var(--visit-inside-bg, var(--color-white));
     color: var(--color-black);
@@ -61,6 +69,14 @@ const textureStore = useTextureStore();
     padding: 14px 21px;
     @include default-transitions(background-color);
     cursor: pointer;
+
+    @media (max-width: 768px) {
+      padding: 10px 16px;
+    }
+
+    @media (max-width: 540px) {
+      font-size: css-clamp(12px, 16px);
+    }
 
     &:hover {
       --arrow-static-transform: -100%;
@@ -71,9 +87,13 @@ const textureStore = useTextureStore();
 
   .visit-text {
     padding: 0 16px;
-    font-size: 20px;
+    font-size: css-clamp(16px, 20px);
     font-family: var(--font-ping-regular);
     color: var(--color-white);
+
+    @media (max-width: 540px) {
+      font-size: css-clamp(12px, 16px);
+    }
   }
 
   .arrow-wrapper {
@@ -83,6 +103,10 @@ const textureStore = useTextureStore();
     position: relative;
     overflow: hidden;
     @include size(var(--arrow-wrapper-size));
+
+    @media (max-width: 540px) {
+      --arrow-wrapper-size: #{css-clamp-vw(16px, 24px, 540)};
+    }
   }
 
   .arrow {
