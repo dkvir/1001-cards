@@ -28,9 +28,9 @@ watch(
   () => textureStore.textureIndex,
   (curr) => {
     if (curr) {
-      let currId = (curr % 40) + 1;
+      let currId = (curr % 120) + 1;
 
-      imageLink.value = `/images/1001-back/${currId}.png`;
+      imageLink.value = `/images/1001-back-120/${currId}.png`;
 
       router.push({
         path: route.path,
@@ -61,7 +61,7 @@ const closeTexture = () => {
 const changeSeo = (imageId) => {
   useHead({
     titleTemplate: () => {
-      return imageId ? `მიზეზი ${imageId}` : "ევექსი";
+      return "ევექსი - 1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.";
     },
     meta: [
       { name: "og:title", content: "ევექსი" },

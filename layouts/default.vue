@@ -14,7 +14,7 @@ const route = useRoute();
 const changeSeo = (imageId) => {
   useHead({
     titleTemplate: () => {
-      return imageId ? `მიზეზი ${imageId}` : "ევექსი";
+      return "ევექსი - 1001 მიზეზი, თუ რატომ უნდა იცხოვრო დიდხანს.";
     },
     meta: [
       { name: "og:title", content: "ევექსი" },
