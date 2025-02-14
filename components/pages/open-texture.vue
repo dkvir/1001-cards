@@ -114,7 +114,6 @@ const closeTexture = () => {
     }
 
     &:hover {
-      //u i i a i u u i i i a i
       --close-bg: var(--color-yellow);
       --icon-stroke: var(--color-black);
     }
