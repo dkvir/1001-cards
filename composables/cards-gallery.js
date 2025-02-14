@@ -72,7 +72,6 @@ export const useCardsGallery = class App {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.shadowMap.enabled = true;
-    // this.renderer.setClearColor(0xf9f9f9);
 
     this.scene = new THREE.Scene();
 
