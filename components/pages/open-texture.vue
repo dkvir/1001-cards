@@ -79,6 +79,12 @@ const closeTexture = () => {
     background-color: var(--color-white);
     border-radius: 15px;
 
+    @media (min-width: 540px) and (max-width: 1600px) and (max-height: 900px) {
+      margin-top: -100px;
+      width: 315px;
+      height: 441px;
+    }
+
     @media (max-width: 540px) {
       width: css-clamp-vw(287px, 450px, 540);
       height: css-clamp-vw(400px, 630px, 540);
