@@ -4,6 +4,7 @@
     <slot />
     <common-footer />
     <common-loader />
+    <common-tiny-drag-navigator />
   </div>
 </template>
 

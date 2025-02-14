@@ -435,6 +435,10 @@ export const useCardsGallery = class App {
 
     window.addEventListener("mousedown", () => {
       this.mDown = true;
+      this.textureLoader.changeIsZoomedStatus(false);
+    });
+    window.addEventListener("touchstart", () => {
+      this.textureLoader.changeIsZoomedStatus(false);
     });
     window.addEventListener("mousemove", () => {
       if (this.mDown) {
