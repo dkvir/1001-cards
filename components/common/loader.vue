@@ -20,6 +20,7 @@
       <div class="bg"></div>
     </div>
     <div class="content flex-center flex-column">
+      <div class="loading-text">საიტი იტვირთება...</div>
       <div id="text">1001</div>
     </div>
     <nuxt-icon
@@ -199,6 +200,21 @@ onMounted(() => {
       100% var(--clip-bg-1, 100%),
       0 var(--clip-bg-1, 100%)
     );
+
+    .loading-text {
+      position: absolute;
+      top: var(--page-offset-padding);
+      left: 50%;
+      transform: translate3d(-50%, 0, 0);
+      font-size: css-clamp(16px, 22px);
+      font-family: var(--font-ping-regular);
+      color: var(--color-white);
+      animation-name: setopacity;
+      animation-duration: 1.2s;
+      animation-timing-function: linear;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+    }
     #text {
       font-size: 464px;
       line-height: 1;
@@ -273,6 +289,14 @@ onMounted(() => {
       transition: transform 2s ease-in-out, opacity 1s ease-in-out;
       transition-delay: 0.45s;
     }
+  }
+}
+@keyframes setopacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
   }
 }
 </style>
