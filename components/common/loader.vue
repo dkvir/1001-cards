@@ -47,7 +47,9 @@ const setLetterIconOpacity = ref(false);
 watch(
   () => [textureloadedStore.loadedTexture, textureloadedStore.timelineCompete],
   ([curr1, prev1], [curr2, prev2]) => {
+    console.log(curr1, curr2);
     if (curr1 && curr2) {
+      console.log(curr1, curr2, "loaded");
       setTimeout(() => {
         gsap.fromTo(
           ".loader",
