@@ -38,64 +38,67 @@
 <script setup>
 import gsap from "gsap";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
+import { nextTick } from "vue";
 
 const textureloadedStore = useTextureLoaderStore();
 const textEl = ref(null);
 const letteringIcon = ref(null);
 const setLetterIconOpacity = ref(false);
 
-watch(
-  () => [textureloadedStore.isLoaded, textureloadedStore.timelineCompete],
-  ([curr1, prev1], [curr2, prev2]) => {
-    console.log(
-      "texture:",
-      curr1,
-      "timelineCurr:",
-      curr2,
-      "timelinePrev:",
-      prev2
-    );
-    if (curr1 && curr2) {
-      console.log(curr1, curr2, "loaded");
-      setTimeout(() => {
-        gsap.fromTo(
-          ".loader",
-          {
-            "--text-scale": 1,
-            "--text-transform-y": "0",
-            "--lettering-opacity": 0,
-          },
-          {
-            "--text-scale": 0.7,
-            "--text-transform-y": "-200px",
-            "--lettering-opacity": 1,
-            onComplete: () => {
-              setTimeout(() => {
-                gsap.fromTo(
-                  ".loader",
-                  {
-                    "--clip-bg-1": "100%",
-                  },
-                  {
-                    "--clip-bg-1": "0%",
-                    duration: 0.5,
-                    ease: "power4.out",
-                    onComplete: () => {
-                      setTimeout(() => {
-                        textureloadedStore.changeloaderComplete(true);
-                        setLetterIconOpacity.value = true;
-                      }, 500);
-                    },
-                  }
-                );
-              }, 1500);
+nextTick(() => {
+  watch(
+    () => [textureloadedStore.isLoaded, textureloadedStore.timelineCompete],
+    ([curr1, prev1], [curr2, prev2]) => {
+      console.log(
+        "texture:",
+        curr1,
+        "timelineCurr:",
+        curr2,
+        "timelinePrev:",
+        prev2
+      );
+      if (curr1 && curr2) {
+        console.log(curr1, curr2, "loaded");
+        setTimeout(() => {
+          gsap.fromTo(
+            ".loader",
+            {
+              "--text-scale": 1,
+              "--text-transform-y": "0",
+              "--lettering-opacity": 0,
             },
-          }
-        );
-      }, 1000);
+            {
+              "--text-scale": 0.7,
+              "--text-transform-y": "-200px",
+              "--lettering-opacity": 1,
+              onComplete: () => {
+                setTimeout(() => {
+                  gsap.fromTo(
+                    ".loader",
+                    {
+                      "--clip-bg-1": "100%",
+                    },
+                    {
+                      "--clip-bg-1": "0%",
+                      duration: 0.5,
+                      ease: "power4.out",
+                      onComplete: () => {
+                        setTimeout(() => {
+                          textureloadedStore.changeloaderComplete(true);
+                          setLetterIconOpacity.value = true;
+                        }, 500);
+                      },
+                    }
+                  );
+                }, 1500);
+              },
+            }
+          );
+        }, 1000);
+      }
     }
-  }
-);
+  );
+});
 
 onMounted(() => {
   textEl.value = document.getElementById("text");
