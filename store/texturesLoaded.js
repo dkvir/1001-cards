@@ -8,6 +8,7 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
     isLoaded: false,
     timelineCompete: false,
     loaderComplete: false,
+    isZoomed: false,
   }),
   actions: {
     preloadTexture(url) {
@@ -35,6 +36,10 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
     },
     changeloaderComplete(status) {
       this.loaderComplete = status;
+    },
+    changeIsZoomedStatus(status) {
+      this.isZoomed = status;
+      console.log(status);
     },
   },
 });
