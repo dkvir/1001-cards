@@ -345,16 +345,13 @@ export const useCardsGallery = class App {
       const matrix = new THREE.Matrix4();
       this.instancedMesh.getMatrixAt(instanceId, matrix);
 
-      // Extract position from the matrix
       const position = new THREE.Vector3();
       position.setFromMatrixPosition(matrix);
 
-      // Update matrix with current scale
       this.dummy.position.copy(position);
       this.dummy.scale.set(scale, scale, scale);
       this.dummy.updateMatrix();
 
-      // Set the updated matrix
       this.instancedMesh.setMatrixAt(instanceId, this.dummy.matrix);
     });
 
@@ -364,18 +361,14 @@ export const useCardsGallery = class App {
   }
 
   animateScale(instanceId, targetScale) {
-    // Kill any existing animation for this instance
     if (this.scaleAnimations.has(instanceId)) {
       this.scaleAnimations.get(instanceId).kill();
     }
 
-    // Get current scale or use base scale if not set
     const currentScale = this.instanceScales.get(instanceId) || this.baseScale;
 
-    // Create animation object to track progress
     const scaleObj = { scale: currentScale };
 
-    // Create new GSAP animation
     const animation = gsap.to(scaleObj, {
       scale: targetScale,
       duration: 0.3,
@@ -391,7 +384,6 @@ export const useCardsGallery = class App {
       },
     });
 
-    // Store the animation
     this.scaleAnimations.set(instanceId, animation);
   }
 
