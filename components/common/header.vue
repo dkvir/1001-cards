@@ -41,34 +41,27 @@ const textureStore = useTextureStore();
   z-index: 3;
   pointer-events: none;
 
-  @media (max-width: 768px) {
-    padding-top: 20px;
-  }
-
   .header-left {
     background-color: var(--header-left, transparent);
     padding: 0 16px;
     border-radius: 8px;
     pointer-events: all;
-    height: 58px;
+    height: css-clamp(34px, 58px);
     &.has-background {
       --header-left: var(--color-evex-blue);
-    }
-
-    @media (max-width: 768px) {
-      height: css-clamp-vw(34px, 58px, 768);
     }
 
     :deep(.nuxt-icon) {
       width: auto;
       height: 32px;
+      height: css-clamp-vw(20px, 32px);
 
-      @media (max-width: 768px) {
-        height: css-clamp-vw(16px, 32px, 768);
+      @media (max-width: 1024px) {
+        height: css-clamp-vw(15px, 20px, 1024);
       }
 
       svg {
-        height: 100%;
+        height: 80%;
         width: auto;
       }
     }
@@ -76,16 +69,12 @@ const textureStore = useTextureStore();
 
   .header-right-link {
     position: relative;
-    height: 60px;
+    height: css-clamp(34px, 60px);
     padding: 0 12px;
     text-decoration: none;
     border-radius: 8px;
     opacity: var(--play-video-opacity, 1);
     pointer-events: all;
-
-    @media (max-width: 768px) {
-      height: css-clamp-vw(34px, 60px, 768);
-    }
 
     &:hover {
       --play-video-margin: 10px;
@@ -113,23 +102,24 @@ const textureStore = useTextureStore();
     .play-video-text {
       margin-right: var(--play-video-margin, 0);
       line-height: 1;
-      font-size: 21px;
+      font-size: css-clamp-vw(11px, 21px);
       font-family: var(--font-ping-regular);
       white-space: nowrap;
       color: var(--color-white);
-      @media (max-width: 768px) {
-        font-size: css-clamp-vw(11px, 21px, 768);
-      }
       @include default-transitions(margin-right);
     }
 
     :deep(.nuxt-icon) {
       margin-left: 10px;
       display: block;
-      @include size(css-clamp(32px, 42px));
+      @include size(css-clamp(24px, 42px));
 
-      @media (max-width: 768px) {
-        @include size(css-clamp-vw(20px, 32px, 768));
+      @media (max-width: 1366px) {
+        @include size(css-clamp(20px, 24px, 1366));
+      }
+
+      @media (max-width: 1024px) {
+        @include size(css-clamp-vw(18px, 20px, 1024));
       }
 
       svg {

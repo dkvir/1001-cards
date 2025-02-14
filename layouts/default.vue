@@ -3,7 +3,7 @@
     <common-header />
     <slot />
     <common-footer />
-    <common-loader />
+    <!-- <common-loader /> -->
   </div>
 </template>
 

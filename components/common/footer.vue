@@ -29,21 +29,26 @@ const textureStore = useTextureStore();
   font-family: var(--font-ping-regular);
   pointer-events: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     justify-content: center;
   }
 
-  .take-care {
+  :deep(.take-care) {
     position: relative;
     padding: 18px 16px;
     border-radius: 8px;
 
+    svg {
+      width: auto;
+      height: css-clamp(16px, 24px);
+    }
+
     @media (max-width: 1024px) {
+      padding: 16px;
       opacity: var(--visit-opacity, 0);
       @include default-transitions(opacity);
     }
-
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       display: none;
     }
 
