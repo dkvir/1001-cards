@@ -170,11 +170,13 @@ export const useCardsGallery = class App {
           }
           // Set new hover
           this.hoveredInstanceId = instanceId;
+          this.textureStore.togglechangeCursor(true);
           this.animateScale(instanceId, this.hoverScale);
         }
       } else if (this.hoveredInstanceId !== null) {
         // Reset hover when no intersection
         this.animateScale(this.hoveredInstanceId, this.baseScale);
+        this.textureStore.togglechangeCursor(false);
         this.hoveredInstanceId = null;
       }
 

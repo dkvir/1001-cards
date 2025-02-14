@@ -79,7 +79,7 @@ const closeTexture = () => {
     background-color: var(--color-white);
     border-radius: 15px;
 
-    @media (min-width: 540px) and (max-width: 1600px) and (max-height: 900px) {
+    @media (min-width: 540px) and (max-height: 900px) {
       margin-top: -100px;
       width: 315px;
       height: 441px;
@@ -104,14 +104,9 @@ const closeTexture = () => {
     font-size: 30px;
     cursor: pointer;
     background-color: var(--close-bg, transparent);
-    @include size(55px);
+    @include size(var(--app-header-height));
     @include default-transitions(background-color);
     border-radius: 8px;
-
-    @media (max-width: 768px) {
-      @include size(css-clamp-vw(32px, 55px, 768));
-      top: calc(var(--page-offset-padding) + var(--page-offset-padding) / 2);
-    }
 
     &:hover {
       --close-bg: var(--color-yellow);
@@ -120,6 +115,9 @@ const closeTexture = () => {
     :deep(.exit-icon) {
       @include size(50%);
       display: block;
+      svg {
+        @include size(100%);
+      }
       path {
         @include default-transitions(stroke);
 

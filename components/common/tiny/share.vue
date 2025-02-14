@@ -32,7 +32,8 @@ const clickShare = () => {
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
-  padding: 16px 20px;
+  height: var(--app-header-height);
+  padding: 0 css-clamp(16px, 20px);
   border-radius: 8px;
   background-color: var(--share-hover-bg-color, var(--color-eleonor));
   color: var(--share-hover-color, var(--color-black));
@@ -63,6 +64,10 @@ const clickShare = () => {
   }
 
   :deep(.share-arrow) {
+    @include size(css-clamp(20px, 24px));
+    svg {
+      @include size(100%);
+    }
     path {
       stroke: var(--stroke-hover, var(--color-black));
       @include default-transitions(stroke);
@@ -70,7 +75,7 @@ const clickShare = () => {
   }
 
   .share-text {
-    font-size: 18px;
+    font-size: css-clamp(14px, 18px);
     font-family: var(--font-ping-regular);
     line-height: 1;
     margin-right: 8px;

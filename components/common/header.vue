@@ -33,10 +33,11 @@ const textureStore = useTextureStore();
 <style lang="scss" scoped>
 .header {
   position: fixed;
-  top: 0;
+  top: var(--page-offset-padding);
   left: 0;
   width: 100%;
-  padding: var(--page-offset-padding);
+  height: var(--app-header-height);
+  padding: 0 var(--page-offset-padding);
   padding-bottom: 0;
   z-index: 3;
   pointer-events: none;
@@ -45,23 +46,18 @@ const textureStore = useTextureStore();
     background-color: var(--header-left, transparent);
     padding: 0 16px;
     border-radius: 8px;
-    pointer-events: all;
-    height: css-clamp(34px, 58px);
+    height: inherit;
+    pointer-events: none;
     &.has-background {
       --header-left: var(--color-evex-blue);
     }
 
     :deep(.nuxt-icon) {
       width: auto;
-      height: 32px;
-      height: css-clamp-vw(20px, 32px);
-
-      @media (max-width: 1024px) {
-        height: css-clamp-vw(15px, 20px, 1024);
-      }
+      height: 50%;
 
       svg {
-        height: 80%;
+        height: 100%;
         width: auto;
       }
     }
@@ -69,7 +65,7 @@ const textureStore = useTextureStore();
 
   .header-right-link {
     position: relative;
-    height: css-clamp(34px, 60px);
+    height: var(--app-header-height);
     padding: 0 12px;
     text-decoration: none;
     border-radius: 8px;

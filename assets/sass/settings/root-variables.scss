@@ -18,12 +18,13 @@
   --selection-color: var(--color-white);
 
   --page-offset-padding: #{css-clamp(32px, 64px)};
-  --app-header-height: 96px;
+  --app-header-height: #{css-clamp(40px, 60px)};
+
   @include mq(max-width 1024px) {
-    --page-offset-padding: 32px;
+    --page-offset-padding: #{css-clamp-vw(16px, 32px, 1024)};
   }
-  @include mq(max-width 1024px) {
-    --page-offset-padding: 16px;
-    --app-header-height: 53px;
+
+  @include mq(max-width 768px) {
+    --app-header-height: #{css-clamp-vw(34px, 40px, 768)};
   }
 }

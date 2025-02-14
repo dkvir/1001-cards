@@ -8,7 +8,7 @@
     <a
       href="https://evex.ge/ka/booking"
       target="_blank"
-      class="visit-link flex"
+      class="visit-link flex-center"
     >
       <span class="uppercase">დაჯავშნე</span>
       <div class="arrow-wrapper flex-center">
@@ -37,6 +37,7 @@ const textureStore = useTextureStore();
   color: var(--visit-color, var(--color-white));
   padding: 5px;
   pointer-events: all;
+  height: var(--app-header-height);
 
   @media (max-width: 1024px) {
     opacity: var(--visit-opacity, 0);
@@ -47,12 +48,6 @@ const textureStore = useTextureStore();
 
   @media (max-width: 600px) {
     width: 100%;
-  }
-
-  @media (max-width: 768px) {
-    position: relative;
-    left: 0;
-    display: flex;
     justify-content: space-between;
   }
 
@@ -85,7 +80,8 @@ const textureStore = useTextureStore();
     background-color: var(--visit-inside-bg, var(--color-white));
     color: var(--color-black);
     border-radius: 8px;
-    padding: 14px 21px;
+    padding: 0 css-clamp(14px, 21px);
+    height: 100%;
     @include default-transitions(background-color);
     cursor: pointer;
 
@@ -101,7 +97,7 @@ const textureStore = useTextureStore();
   }
 
   .visit-text {
-    padding: 0 16px;
+    padding: 0 css-clamp(10px, 16px) 0 css-clamp(13px, 16px);
     font-size: css-clamp(16px, 20px);
     font-family: var(--font-ping-regular);
     color: var(--color-white);

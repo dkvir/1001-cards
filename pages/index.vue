@@ -1,7 +1,13 @@
 <template>
-  <div class="about-page">
+  <div class="home-page">
     <canvas
-      :class="['canvas', { 'has-blur': textureStore.textureIndex !== null }]"
+      :class="[
+        'canvas',
+        {
+          'has-blur': textureStore.textureIndex !== null,
+          'change-cursor': textureStore.changeCursor,
+        },
+      ]"
     ></canvas>
     <div id="text-input" contenteditable="true"></div>
     <pages-open-texture />
@@ -43,7 +49,7 @@ function getRandomAtlas(arr) {
 </script>
 
 <style lang="scss" scoped>
-.about-page {
+.home-page {
   width: 100vw;
   height: 100vh;
 
@@ -54,6 +60,9 @@ function getRandomAtlas(arr) {
 
     &.has-blur {
       filter: blur(8px);
+    }
+    &.change-cursor {
+      cursor: pointer;
     }
   }
 

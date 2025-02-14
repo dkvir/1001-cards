@@ -6,7 +6,7 @@
       { 'is-invisible': textureStore.textureIndex == null },
     ]"
   >
-    <nuxt-icon class="take-care" name="take-care" filled />
+    <nuxt-icon class="take-care flex-center" name="take-care" filled />
     <common-tiny-share />
     <common-tiny-visit />
   </div>
@@ -26,6 +26,7 @@ const textureStore = useTextureStore();
   z-index: 3;
   padding: 0 var(--page-offset-padding);
   width: 100%;
+  height: var(--app-header-height);
   font-family: var(--font-ping-regular);
   pointer-events: none;
 
@@ -35,16 +36,17 @@ const textureStore = useTextureStore();
 
   :deep(.take-care) {
     position: relative;
-    padding: 18px 16px;
+    padding: 0 css-clamp(10px, 16px);
+    height: var(--app-header-height);
     border-radius: 8px;
 
     svg {
       width: auto;
-      height: css-clamp(16px, 24px);
+      height: 50%;
     }
 
     @media (max-width: 1024px) {
-      padding: 16px;
+      padding: 0 10px;
       opacity: var(--visit-opacity, 0);
       @include default-transitions(opacity);
     }
