@@ -113,7 +113,7 @@ export const useLoaderTilemines = () => {
         ease: "power4.out",
         onComplete: () => {
           textureloadedStore.changeTimelineLoaded(true);
-          console.log("complete", textureloadedStore);
+          console.log("complete", textureloadedStore.timelineCompete);
         },
       },
       "-=0.1"
