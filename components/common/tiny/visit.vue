@@ -5,7 +5,11 @@
       { 'is-invisible': textureStore.textureIndex == null },
     ]"
   >
-    <a href="#" target="_blank" class="visit-link flex">
+    <a
+      href="https://evex.ge/ka/booking"
+      target="_blank"
+      class="visit-link flex"
+    >
       <span class="uppercase">დაჯავშნე</span>
       <div class="arrow-wrapper flex-center">
         <nuxt-icon class="arrow visit-arrow-static" name="visit-arrow" filled />
@@ -37,12 +41,16 @@ const textureStore = useTextureStore();
   @media (max-width: 1024px) {
     opacity: var(--visit-opacity, 0);
     pointer-events: none;
+    padding: 3px;
     @include default-transitions(opacity);
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
   }
 
   @media (max-width: 768px) {
     position: relative;
-    width: 100%;
     left: 0;
     display: flex;
     justify-content: space-between;
@@ -66,6 +74,7 @@ const textureStore = useTextureStore();
     --visit-bg: var(--color-evex-gray);
 
     @media (max-width: 1024px) {
+      pointer-events: all;
       --visit-opacity: 1;
     }
   }
@@ -80,12 +89,8 @@ const textureStore = useTextureStore();
     @include default-transitions(background-color);
     cursor: pointer;
 
-    @media (max-width: 768px) {
-      padding: 10px 16px;
-    }
-
-    @media (max-width: 540px) {
-      font-size: css-clamp(12px, 16px);
+    @media (max-width: 1024px) {
+      font-size: css-clamp-vw(13px, 16px, 1024);
     }
 
     &:hover {
@@ -101,18 +106,27 @@ const textureStore = useTextureStore();
     font-family: var(--font-ping-regular);
     color: var(--color-white);
 
+    @media (max-width: 1024px) {
+      font-size: css-clamp-vw(13px, 16px, 1024);
+    }
+
     @media (max-width: 540px) {
-      font-size: css-clamp(12px, 16px);
+      font-size: css-clamp-vw(12px, 11px, 540);
     }
   }
 
   .arrow-wrapper {
     --arrow-wrapper-size: 24px;
     margin-left: 5px;
+    --arrow-wrapper-size: #{css-clamp-vw(18px, 24px)};
 
     position: relative;
     overflow: hidden;
     @include size(var(--arrow-wrapper-size));
+
+    @media (max-width: 1024px) {
+      --arrow-wrapper-size: #{css-clamp-vw(13px, 18px, 1024)};
+    }
 
     @media (max-width: 540px) {
       --arrow-wrapper-size: #{css-clamp-vw(16px, 24px, 540)};
