@@ -472,6 +472,9 @@ export const useCardsGallery = class App {
         );
         this.orbit.update();
       },
+      onComplete: () => {
+        this.textureLoader.changeIsZoomedStatus(true);
+      },
     });
   }
 };
