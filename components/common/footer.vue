@@ -42,7 +42,7 @@ const textureStore = useTextureStore();
 
     svg {
       width: auto;
-      height: 50%;
+      height: 40%;
     }
 
     @media (max-width: 1024px) {
