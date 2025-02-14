@@ -33,6 +33,7 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
     },
     changeTimelineLoaded(status) {
       this.timelineCompete = status;
+      console.log("changeTimelineLoaded", this.timelineCompete);
     },
     changeloaderComplete(status) {
       this.loaderComplete = status;
