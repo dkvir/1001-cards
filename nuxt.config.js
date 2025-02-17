@@ -24,7 +24,15 @@ export default defineNuxtConfig({
         // ...favicon.meta,
       ],
       link: [...favicon.links],
-      script: [{ src: "/js/InertiaPlugin.min.js" }],
+      script: [
+        { src: "/js/InertiaPlugin.min.js" },
+        {
+          src: "https://connect.facebook.net/en_US/sdk.js",
+          async: true,
+          defer: true,
+          crossorigin: "anonymous",
+        },
+      ],
     },
   },
   css: ["@/assets/sass/style.scss"],
