@@ -8,9 +8,9 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ```bash
 node --version
-```
 
-version 22.13.1
+v22.13.1
+```
 
 ### 2. install node modules
 
