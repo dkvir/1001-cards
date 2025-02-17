@@ -31,11 +31,23 @@ const textureStore = useTextureStore();
 const clickShare = () => {
   textureStore.toggleShare(!textureStore.isShareActive);
 
-  const url = encodeURIComponent(`${window.location.href}`); // Replace with your website URL
-  const shareUrl = `https://www.facebook.com/login.php?next=https://www.facebook.com/sharer/sharer.php?u=${url}`;
+  const url = encodeURIComponent(window.location.href);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // Open in new tab
-  window.open(shareUrl, "_blank");
+  if (isMobile) {
+    // Try to open Facebook app
+    const fbUrl = `fb://share?link=${url}`;
+    window.location.href = fbUrl;
+
+    // Fallback to web after a short delay if app doesn't open
+    setTimeout(() => {
+      window.location.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    }, 2000);
+  } else {
+    // Desktop behavior
+    const shareUrl = `https://www.facebook.com/login.php?next=https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(shareUrl, "_blank");
+  }
 };
 </script>
 
