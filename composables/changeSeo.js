@@ -2,8 +2,7 @@ export const useChangeSeo = (imageId) => {
   const route = useRoute();
   const config = useRuntimeConfig();
 
-  const siteUrl =
-    config.public.siteUrl ?? "https://horizontal-slider-chi.vercel.app";
+  const siteUrl = config.public.siteUrl;
 
   return useHead({
     titleTemplate: () => {

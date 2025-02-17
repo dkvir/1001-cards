@@ -17,17 +17,6 @@ import { useTextureStore } from "@/store/texture";
 
 const textureStore = useTextureStore();
 
-// const clickShare = () => {
-//   textureStore.toggleShare(!textureStore.isShareActive);
-
-//   const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`;
-//   window.open(shareUrl, "_blank");
-
-//   // const url = encodeURIComponent(window.location.href);
-//   // window.open(`fb-messenger://share?link=${window.location.href}`, "_blank");
-
-// };
-
 const clickShare = () => {
   textureStore.toggleShare(!textureStore.isShareActive);
 
@@ -35,9 +24,12 @@ const clickShare = () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   if (isMobile) {
-    // Try to open Facebook app
     const fbUrl = `fb://share?link=${url}`;
     window.location.href = fbUrl;
+
+    // messenger
+    // const url = encodeURIComponent(window.location.href);
+    // window.open(`fb-messenger://share?link=${window.location.href}`, "_blank");
   } else {
     const shareUrl = `https://www.facebook.com/login.php?next=https://www.facebook.com/sharer/sharer.php?u=${url}`;
     window.open(shareUrl, "_blank");
