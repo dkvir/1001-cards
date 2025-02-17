@@ -19,7 +19,7 @@
       @click.prevent="clickShareMessenger"
     >
       <nuxt-icon name="social-messenger" class="messenger-icon" filled />
-      <span class="share-text uppercase">გააზიარე</span>
+      <span class="share-text uppercase">გაგზავნე</span>
     </div>
   </div>
 </template>
