@@ -10,6 +10,8 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 node --version
 ```
 
+version 22.13.1
+
 ### 2. install node modules
 
 Make sure to install the dependencies:
