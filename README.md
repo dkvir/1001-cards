@@ -4,6 +4,19 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ## Setup
 
+[Node.JS and NPM](http://nodejs.org)
+
+```bash
+node --version
+```
+
+### 2. install node modules
+
+Make sure to install the dependencies:
+
+````bash
+
+
 Make sure to install dependencies:
 
 ```bash
@@ -18,7 +31,7 @@ yarn install
 
 # bun
 bun install
-```
+````
 
 ## Development Server
 
