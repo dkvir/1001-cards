@@ -1,12 +1,16 @@
 export const useTextureStore = defineStore("useTextureStore", {
   state: () => ({
     textureIndex: null,
+    textureAtlasIndex: null,
     changeCursor: false,
     isShareActive: false,
   }),
   actions: {
     changeTextureIndex(index) {
       this.textureIndex = index;
+    },
+    changeTextureAtlasIndex(index) {
+      this.textureAtlasIndex = index;
     },
     toggleShare(status) {
       this.isShareActive = status;

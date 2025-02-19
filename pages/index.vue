@@ -38,13 +38,22 @@ watch(
 );
 
 onMounted(() => {
-  const atlasUrls = ["/images/atlas-120.webp"];
+  const atlasUrls = [
+    "/images/atlases/atlas_1.webp",
+    "/images/atlases/atlas_2.webp",
+    "/images/atlases/atlas_3.webp",
+  ];
 
-  textureLoadStore.preloadTexture(atlasUrls[0]);
+  const ramdonAtlas = getRandomAtlas(atlasUrls);
+
+  textureLoadStore.preloadTexture(ramdonAtlas);
 });
 
 function getRandomAtlas(arr) {
-  arr[Math.floor(Math.random() * arr.length)];
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  textureStore.changeTextureAtlasIndex(randomIndex);
+
+  return arr[randomIndex];
 }
 </script>
 

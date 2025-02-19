@@ -27,9 +27,9 @@ watch(
   () => textureStore.textureIndex,
   (curr) => {
     if (curr) {
-      let currId = (curr % 120) + 1;
+      let currId = (curr % 100) + 1 + textureStore.textureAtlasIndex * 100;
 
-      imageLink.value = `/images/1001-back-120/${currId}.webp`;
+      imageLink.value = `/images/300-back/${currId}.webp`;
 
       router.push({
         path: route.path,
