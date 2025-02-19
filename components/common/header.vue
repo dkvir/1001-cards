@@ -11,7 +11,8 @@
       <nuxt-icon name="logo" filled />
     </div>
     <a
-      href="#"
+      href="https://www.facebook.com/share/v/19yjYHsM37/?mibextid=wwXIfr"
+      target="_blank"
       :class="[
         'header-right-link flex-center',
         {
