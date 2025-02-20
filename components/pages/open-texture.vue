@@ -26,7 +26,7 @@ const imageLink = ref(null);
 watch(
   () => textureStore.textureIndex,
   (curr) => {
-    if (curr) {
+    if (curr !== null) {
       let currId = (curr % 100) + 1 + textureStore.textureAtlasIndex * 100;
 
       imageLink.value = `/images/300-back/${currId}.webp`;
