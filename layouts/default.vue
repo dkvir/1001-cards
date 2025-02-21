@@ -11,11 +11,15 @@
 <script setup>
 const route = useRoute();
 
-if (route?.query?.imageId) {
-  useChangeSeo(route.query.imageId);
-} else {
-  useChangeSeo();
-}
+onMounted(() => {
+  setTimeout(() => {
+    if (route?.query?.imageId) {
+      useChangeSeo(route.query.imageId);
+    } else {
+      useChangeSeo();
+    }
+  }, 500);
+});
 </script>
 
 <style lang="scss" scoped></style>
