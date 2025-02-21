@@ -24,8 +24,7 @@ export const useChangeSeo = (imageId, folder) => {
         name: "og:image",
         content: () => {
           return imageId
-            ? siteUrl +
-                `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
+            ? siteUrl + `/images/1001-folders-back/100-back-1/${imageId}.webp`
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -40,7 +39,7 @@ export const useChangeSeo = (imageId, folder) => {
         name: "twitter:image",
         content: () => {
           return imageId
-            ? `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
+            ? `/images/1001-folders-back/100-back-1/${imageId}.webp`
             : "/images/share-image.webp";
         },
       },
