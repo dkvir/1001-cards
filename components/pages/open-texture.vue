@@ -35,6 +35,7 @@ watch(
         path: route.path,
         query: {
           imageId: currId,
+          folder: textureStore.textureAtlasIndex,
         },
       });
 
