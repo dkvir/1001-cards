@@ -39,7 +39,7 @@ watch(
         },
       });
 
-      useChangeSeo(currId);
+      useChangeSeo(currId, textureStore.textureAtlasIndex);
     } else {
       router.push({
         path: route.path,

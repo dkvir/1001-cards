@@ -1,9 +1,6 @@
-import { useTextureStore } from "@/store/texture";
-
 export const useChangeSeo = (imageId, folder) => {
   const route = useRoute();
   const config = useRuntimeConfig();
-  const textureStore = useTextureStore();
 
   const siteUrl = config.public.siteUrl;
 
