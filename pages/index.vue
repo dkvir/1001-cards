@@ -39,9 +39,16 @@ watch(
 
 onMounted(() => {
   const atlasUrls = [
-    "/images/atlases/atlas_1.webp",
-    "/images/atlases/atlas_2.webp",
-    "/images/atlases/atlas_3.webp",
+    "/images/atlases/atlas-1.webp",
+    "/images/atlases/atlas-2.webp",
+    "/images/atlases/atlas-3.webp",
+    "/images/atlases/atlas-4.webp",
+    "/images/atlases/atlas-5.webp",
+    "/images/atlases/atlas-6.webp",
+    "/images/atlases/atlas-7.webp",
+    "/images/atlases/atlas-8.webp",
+    "/images/atlases/atlas-9.webp",
+    "/images/atlases/atlas-10.webp",
   ];
 
   const ramdonAtlas = getRandomAtlas(atlasUrls);
@@ -51,7 +58,7 @@ onMounted(() => {
 
 function getRandomAtlas(arr) {
   const randomIndex = Math.floor(Math.random() * arr.length);
-  textureStore.changeTextureAtlasIndex(randomIndex);
+  textureStore.changeTextureAtlasIndex(randomIndex + 1);
 
   return arr[randomIndex];
 }
