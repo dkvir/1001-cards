@@ -1,6 +1,6 @@
 import { useTextureStore } from "@/store/texture";
 
-export const useChangeSeo = (imageId) => {
+export const useChangeSeo = (imageId, folder) => {
   const route = useRoute();
   const config = useRuntimeConfig();
   const textureStore = useTextureStore();
@@ -28,7 +28,7 @@ export const useChangeSeo = (imageId) => {
         content: () => {
           return imageId
             ? siteUrl +
-                `/images/1001-folders-back/100-back-${textureStore.textureAtlasIndex}/${imageId}.webp`
+                `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -43,7 +43,7 @@ export const useChangeSeo = (imageId) => {
         name: "twitter:image",
         content: () => {
           return imageId
-            ? `/images/1001-folders-back/100-back-${textureStore.textureAtlasIndex}/${imageId}.webp`
+            ? `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
             : "/images/share-image.webp";
         },
       },
