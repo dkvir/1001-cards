@@ -24,7 +24,7 @@ export const useChangeSeo = (imageLink) => {
         name: "og:image",
         content: () => {
           return imageLink
-            ? siteUrl + "/images" + imageLink
+            ? siteUrl + "/images/1001-folders-back" + imageLink
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -39,7 +39,7 @@ export const useChangeSeo = (imageLink) => {
         name: "twitter:image",
         content: () => {
           return imageLink
-            ? siteUrl + "/images" + imageLink
+            ? siteUrl + "/images/1001-folders-back" + imageLink
             : "/images/share-image.webp";
         },
       },
