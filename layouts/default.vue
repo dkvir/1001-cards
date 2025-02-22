@@ -12,7 +12,9 @@
 const route = useRoute();
 
 if (route?.query?.imageId) {
-  useChangeSeo(route.query.imageId, route.query.folder);
+  const currId = Number(route.query.imageId) + Number(route.query.folder) * 100;
+  console.log(currId);
+  useChangeSeo(currId);
 } else {
   useChangeSeo();
 }
