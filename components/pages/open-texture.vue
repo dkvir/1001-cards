@@ -34,8 +34,7 @@ watch(
       router.push({
         path: route.path,
         query: {
-          imageId: currId,
-          folder: textureStore.textureAtlasIndex,
+          imageLink: `/100-back-${textureStore.textureAtlasIndex}/${currId}.webp`,
         },
       });
 

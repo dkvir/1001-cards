@@ -1,4 +1,4 @@
-export const useChangeSeo = (imageId) => {
+export const useChangeSeo = (imageLink) => {
   const route = useRoute();
   const config = useRuntimeConfig();
 
@@ -23,8 +23,8 @@ export const useChangeSeo = (imageId) => {
       {
         name: "og:image",
         content: () => {
-          return imageId
-            ? siteUrl + `/images/1001-back/${imageId}.webp`
+          return imageLink
+            ? siteUrl + "/images" + imageLink
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -38,8 +38,8 @@ export const useChangeSeo = (imageId) => {
       {
         name: "twitter:image",
         content: () => {
-          return imageId
-            ? siteUrl + `/images/1001-back/${imageId}.webp`
+          return imageLink
+            ? siteUrl + "/images" + imageLink
             : "/images/share-image.webp";
         },
       },
