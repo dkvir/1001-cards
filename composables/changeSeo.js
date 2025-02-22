@@ -4,7 +4,7 @@ export const useChangeSeo = (imageId, folder) => {
 
   const siteUrl = config.public.siteUrl;
 
-  console.log(imageId, folder);
+  const currId = Number(imageId) + Number(folder) * 100;
 
   return useHead({
     titleTemplate: () => {
@@ -26,8 +26,7 @@ export const useChangeSeo = (imageId, folder) => {
         name: "og:image",
         content: () => {
           return imageId
-            ? siteUrl +
-                `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
+            ? siteUrl + `/images/1001-back/${currId}.webp`
             : siteUrl + "/images/share-image.webp";
         },
       },
@@ -42,7 +41,7 @@ export const useChangeSeo = (imageId, folder) => {
         name: "twitter:image",
         content: () => {
           return imageId
-            ? `/images/1001-folders-back/100-back-${folder}/${imageId}.webp`
+            ? siteUrl + `/images/1001-back/${currId}.webp`
             : "/images/share-image.webp";
         },
       },
