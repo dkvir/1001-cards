@@ -50,7 +50,7 @@ const clickShareFb = () => {
 
   if (isMobile.value) {
     if (isAndroid.value) {
-      const intentUrl = `intent://facebook.com/composer?u=${url}#Intent;scheme=https;package=com.facebook.katana;end`;
+      const intentUrl = `intent:#Intent;scheme=https;package=com.facebook.katana;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=${url};S.android.intent.extra.SUBJECT=Check this out;end`;
       window.location.href = intentUrl;
     } else if (isIOS.value) {
       const fbUrl = `fb://share?link=${url}`;
