@@ -157,7 +157,11 @@ export const useCardsGallery = class App {
 
       const intersection = this.raycaster.intersectObject(this.instancedMesh);
 
-      if (this.textureStore.textureIndex !== null) return;
+      if (
+        this.textureStore.textureIndex !== null ||
+        this.textureLoader.mountedTexture !== null
+      )
+        return;
 
       // Handle hover state changes
       if (intersection.length > 0) {
@@ -414,7 +418,12 @@ export const useCardsGallery = class App {
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     });
     this.options.canvas.addEventListener("click", (event) => {
-      if (this.textureStore.textureIndex !== null || this.mDragging) return;
+      if (
+        this.textureStore.textureIndex !== null ||
+        this.mDragging ||
+        this.textureLoader.mountedTexture !== null
+      )
+        return;
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersections = this.raycaster.intersectObject(this.instancedMesh);
@@ -435,10 +444,14 @@ export const useCardsGallery = class App {
 
     window.addEventListener("mousedown", () => {
       this.mDown = true;
-      this.textureLoader.changeIsZoomedStatus(false);
+      if (this.textureLoader.mountedTexture == null) {
+        this.textureLoader.changeIsZoomedStatus(false);
+      }
     });
     window.addEventListener("touchstart", () => {
-      this.textureLoader.changeIsZoomedStatus(false);
+      if (this.textureLoader.mountedTexture == null) {
+        this.textureLoader.changeIsZoomedStatus(false);
+      }
     });
     window.addEventListener("mousemove", () => {
       if (this.mDown) {

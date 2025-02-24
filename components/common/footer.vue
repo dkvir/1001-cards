@@ -3,7 +3,11 @@
     ref="target"
     :class="[
       'footer flex-center justify-between',
-      { 'is-invisible': textureStore.textureIndex == null },
+      {
+        'is-invisible':
+          textureStore.textureIndex !== null &&
+          textureloadedStore.mountedTexture !== null,
+      },
     ]"
   >
     <nuxt-icon class="take-care flex-center" name="take-care" filled />
@@ -14,8 +18,10 @@
 
 <script setup>
 import { useTextureStore } from "@/store/texture";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
+const textureloadedStore = useTextureLoaderStore();
 </script>
 
 <style lang="scss" scoped>

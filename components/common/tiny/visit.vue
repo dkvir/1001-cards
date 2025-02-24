@@ -2,7 +2,11 @@
   <div
     :class="[
       'visit flex-center',
-      { 'is-invisible': textureStore.textureIndex == null },
+      {
+        'is-invisible':
+          textureStore.textureIndex == null &&
+          textureloadedStore.mountedTexture == null,
+      },
     ]"
   >
     <a
@@ -26,8 +30,10 @@
 
 <script setup>
 import { useTextureStore } from "@/store/texture";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
+const textureloadedStore = useTextureLoaderStore();
 </script>
 
 <style lang="scss" scoped>

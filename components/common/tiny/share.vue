@@ -3,7 +3,9 @@
     <div
       class="share share-fb flex-center"
       :class="{
-        'is-invisible': textureStore.textureIndex == null,
+        'is-invisible':
+          textureStore.textureIndex == null &&
+          textureloadedStore.mountedTexture == null,
       }"
       @click.prevent="clickShareFb"
     >
@@ -13,7 +15,9 @@
     <div
       class="share share-messenger flex-center"
       :class="{
-        'is-invisible': textureStore.textureIndex == null,
+        'is-invisible':
+          textureStore.textureIndex == null &&
+          textureloadedStore.mountedTexture == null,
         'is-hidden': !isMobile,
       }"
       @click.prevent="clickShareMessenger"
@@ -26,11 +30,18 @@
 
 <script setup>
 import { useTextureStore } from "@/store/texture";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
+const textureloadedStore = useTextureLoaderStore();
 const isMobile = ref(null);
+const isAndroid = ref(null);
+const isIOS = ref(null);
+
 onMounted(() => {
   isMobile.value = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  isAndroid.value = /Android/i.test(navigator.userAgent);
+  isIOS.value = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 });
 
 const clickShareFb = () => {
@@ -39,8 +50,13 @@ const clickShareFb = () => {
   const url = encodeURIComponent(window.location.href);
 
   if (isMobile.value) {
-    const fbUrl = `fb://share?link=${url}`;
-    window.location.href = fbUrl;
+    if (isAndroid.value) {
+      const fbUrl = `intent://facebook.com/#Intent;scheme=https;package=com.facebook.katana;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=${url};end`;
+      window.location.href = fbUrl;
+    } else if (isIOS.value) {
+      const fbUrl = `fb://share?link=${url}`;
+      window.location.href = fbUrl;
+    }
   } else {
     const shareUrl = `https://www.facebook.com/login.php?next=https://www.facebook.com/sharer/sharer.php?u=${url}`;
     window.open(shareUrl, "_blank");

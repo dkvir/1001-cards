@@ -4,7 +4,9 @@
       :class="[
         'canvas',
         {
-          'has-blur': textureStore.textureIndex !== null,
+          'has-blur':
+            textureStore.textureIndex !== null ||
+            textureLoadStore.mountedTexture !== null,
           'change-cursor': textureStore.changeCursor,
         },
       ]"

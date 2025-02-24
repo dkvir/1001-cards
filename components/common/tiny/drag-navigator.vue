@@ -3,7 +3,8 @@
     :class="[
       'drag-navigator',
       {
-        'is-zoomed': textureLoader.isZoomed,
+        'is-zoomed':
+          textureLoader.isZoomed && textureLoader.mountedTexture == null,
       },
     ]"
   >

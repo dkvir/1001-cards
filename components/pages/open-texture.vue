@@ -2,7 +2,11 @@
   <div
     :class="[
       'open-texture flex-center',
-      { 'is-active': textureStore.textureIndex !== null },
+      {
+        'is-active':
+          textureStore.textureIndex !== null ||
+          textureloadedStore.mountedTexture !== null,
+      },
     ]"
   >
     <div class="image">
@@ -17,8 +21,10 @@
 
 <script setup>
 import { useTextureStore } from "@/store/texture";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
+const textureloadedStore = useTextureLoaderStore();
 const router = useRouter();
 const route = useRoute();
 const imageLink = ref(null);
@@ -52,9 +58,27 @@ watch(
   }
 );
 
+watch(
+  () => textureloadedStore.isZoomed,
+  (curr) => {
+    if (route.query.imageLink) {
+      textureloadedStore.changeMountedTexture(route.query.imageLink);
+      imageLink.value = `/images/1001-folders-back` + route.query.imageLink;
+      console.log("alsfnsj");
+    }
+  }
+);
+
 const closeTexture = () => {
   textureStore.changeTextureIndex(null);
   textureStore.toggleShare(false);
+  if (textureloadedStore.mountedTexture) {
+    textureloadedStore.changeMountedTexture(null);
+    router.push({
+      path: route.path,
+      query: {},
+    });
+  }
 };
 </script>
 

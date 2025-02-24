@@ -4,7 +4,9 @@
       :class="[
         'header-left flex-center',
         {
-          'has-background': textureStore.textureIndex == null,
+          'has-background':
+            textureStore.textureIndex == null &&
+            textureloadedStore.mountedTexture == null,
         },
       ]"
     >
@@ -16,7 +18,9 @@
       :class="[
         'header-right-link flex-center',
         {
-          'has-opacity': textureStore.textureIndex !== null,
+          'has-opacity':
+            textureStore.textureIndex !== null ||
+            textureloadedStore.mountedTexture !== null,
         },
       ]"
     >
@@ -28,7 +32,10 @@
 
 <script setup>
 import { useTextureStore } from "@/store/texture";
+import { useTextureLoaderStore } from "@/store/texturesLoaded";
+
 const textureStore = useTextureStore();
+const textureloadedStore = useTextureLoaderStore();
 </script>
 
 <style lang="scss" scoped>
