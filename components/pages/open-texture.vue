@@ -74,6 +74,7 @@ const closeTexture = () => {
   textureStore.toggleShare(false);
   if (textureloadedStore.mountedTexture) {
     textureloadedStore.changeMountedTexture(null);
+    imageLink.value = null;
     router.push({
       path: route.path,
       query: {},

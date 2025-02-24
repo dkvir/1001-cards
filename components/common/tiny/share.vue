@@ -37,7 +37,6 @@ const textureloadedStore = useTextureLoaderStore();
 const isMobile = ref(null);
 const isAndroid = ref(null);
 const isIOS = ref(null);
-
 onMounted(() => {
   isMobile.value = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   isAndroid.value = /Android/i.test(navigator.userAgent);
@@ -51,8 +50,8 @@ const clickShareFb = () => {
 
   if (isMobile.value) {
     if (isAndroid.value) {
-      const fbUrl = `intent://facebook.com/#Intent;scheme=https;package=com.facebook.katana;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=${url};end`;
-      window.location.href = fbUrl;
+      const intentUrl = `intent://facebook.com/composer?u=${url}#Intent;scheme=https;package=com.facebook.katana;end`;
+      window.location.href = intentUrl;
     } else if (isIOS.value) {
       const fbUrl = `fb://share?link=${url}`;
       window.location.href = fbUrl;
