@@ -4,7 +4,7 @@ import favicon from "./config/favicon";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-  modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt"],
+  modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt", "nuxt-gtag"],
   runtimeConfig: {
     public: {
       siteUrl: process.env.PUBLIC_SITE_URL,
@@ -26,6 +26,9 @@ export default defineNuxtConfig({
       link: [...favicon.links],
       script: [{ src: "/js/InertiaPlugin.min.js" }],
     },
+  },
+  gtag: {
+    id: "G-21R6N9EPX6",
   },
   css: ["@/assets/sass/style.scss"],
   vite: {
