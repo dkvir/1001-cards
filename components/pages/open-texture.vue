@@ -64,7 +64,6 @@ watch(
     if (route.query.imageLink) {
       textureloadedStore.changeMountedTexture(route.query.imageLink);
       imageLink.value = `/images/1001-folders-back` + route.query.imageLink;
-      console.log("alsfnsj");
     }
   }
 );
