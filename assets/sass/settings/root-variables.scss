@@ -17,12 +17,8 @@
   --selection-fill: var(--color-yellow);
   --selection-color: var(--color-white);
 
-  --page-offset-padding: #{css-clamp(32px, 64px)};
+  --page-offset-padding: #{css-clamp(16px, 32px)};
   --app-header-height: #{css-clamp(40px, 60px)};
-
-  @include mq(max-width 1024px) {
-    --page-offset-padding: #{css-clamp-vw(16px, 32px, 1024)};
-  }
 
   @include mq(max-width 768px) {
     --app-header-height: #{css-clamp-vw(34px, 40px, 768)};

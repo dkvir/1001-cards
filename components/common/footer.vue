@@ -28,7 +28,7 @@ const textureloadedStore = useTextureLoaderStore();
 .footer {
   position: fixed;
   left: 0;
-  bottom: css-clamp(32px, 50px);
+  bottom: var(--page-offset-padding);
   z-index: 3;
   padding: 0 var(--page-offset-padding);
   width: 100%;
