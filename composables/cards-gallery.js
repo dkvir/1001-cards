@@ -7,6 +7,7 @@ import { DoubleSide, EquirectangularRefractionMapping } from "three";
 import { useTextureStore } from "@/store/texture";
 import { createLimitPan } from "@ocio/three-camera-utils";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
+import { usePageLink } from "@/store/page-link";
 import gsap from "gsap";
 
 export const useCardsGallery = class App {
@@ -14,6 +15,7 @@ export const useCardsGallery = class App {
     this.options = options;
     this.textureStore = useTextureStore();
     this.textureLoader = useTextureLoaderStore();
+    this.pageLink = usePageLink();
     this.scene = null;
     this.camera = null;
     this.orbit = null;
@@ -152,6 +154,8 @@ export const useCardsGallery = class App {
     this.updateParticlesMatrices();
 
     this.renderer.setAnimationLoop(() => {
+      if (this.options.pauseRenderer) return false;
+
       this.renderer.render(this.scene, this.camera);
       this.raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -490,6 +494,26 @@ export const useCardsGallery = class App {
       },
       onComplete: () => {
         this.textureLoader.changeIsZoomedStatus(true);
+      },
+    });
+  }
+  zoomOut() {
+    gsap.to(this.camera.position, {
+      x: 0,
+      y: 0,
+      z: 50,
+      duration: 2,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        this.orbit.target.set(
+          this.camera.position.x,
+          this.camera.position.y,
+          0
+        );
+        this.orbit.update();
+      },
+      onComplete: () => {
+        this.pageLink.changePageLoading(true);
       },
     });
   }

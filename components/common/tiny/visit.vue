@@ -60,14 +60,13 @@ const textureloadedStore = useTextureLoaderStore();
   &::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    background-color: var(--visit-bg, var(--color-white));
-    opacity: 0.3;
-    width: 100%;
+    border-radius: inherit;
+    background: rgba(124, 124, 124, 0.3);
+    inset: 0;
     height: 100%;
-    border-radius: 8px;
+    width: 100%;
     z-index: -1;
+    backdrop-filter: blur(8px);
   }
 
   &.is-invisible {
@@ -81,15 +80,26 @@ const textureloadedStore = useTextureLoaderStore();
   }
 
   .visit-link {
+    position: relative;
     font-size: css-clamp(16px, 20px);
     font-family: var(--font-ping-regular);
-    background-color: var(--visit-inside-bg, var(--color-white));
     color: var(--color-black);
     border-radius: 8px;
-    padding: 0 css-clamp(14px, 21px);
+    padding: 0 css-clamp(14px, 20px);
     height: 100%;
-    @include default-transitions(background-color);
+
     cursor: pointer;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-color: var(--visit-inside-bg, var(--color-white));
+      border-radius: inherit;
+      opacity: 0.8;
+      @include default-transitions(background-color);
+    }
 
     @media (max-width: 1024px) {
       font-size: css-clamp-vw(13px, 16px, 1024);

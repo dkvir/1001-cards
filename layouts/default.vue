@@ -5,6 +5,8 @@
     <common-footer />
     <common-loader />
     <common-tiny-drag-navigator />
+    <common-page-transitions />
+    <pages-three />
   </div>
 </template>
 

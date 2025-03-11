@@ -3,7 +3,7 @@
     :class="[
       'loader flex-center',
       {
-        'is-loaded': textureloadedStore.loaderComplete,
+        'is-loaded': timelineNone,
       },
     ]"
   >
@@ -22,13 +22,22 @@
     <div class="content flex-center flex-column">
       <div class="loading-text">საიტი იტვირთება...</div>
       <div id="text">1001</div>
+      <nuxt-icon
+        name="lettering-icon"
+        :class="[
+          'lettering-icon reasons-lettering-icon',
+          { 'is-hidden': !route.path.includes('reasons') },
+        ]"
+        filled
+      />
     </div>
     <nuxt-icon
       name="lettering-icon"
       :class="[
-        'lettering-icon',
+        'lettering-icon home-lettering-icon',
         {
           'has-opacity': setLetterIconOpacity,
+          'is-hidden': route.path.includes('reasons'),
         },
       ]"
       filled
@@ -41,9 +50,11 @@ import gsap from "gsap";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureloadedStore = useTextureLoaderStore();
+const route = useRoute();
 const textEl = ref(null);
 const letteringIcon = ref(null);
 const setLetterIconOpacity = ref(false);
+const timelineNone = ref(false);
 
 watch(
   () => textureloadedStore.timelineCompete,
@@ -73,10 +84,11 @@ watch(
                     duration: 0.5,
                     ease: "power4.out",
                     onComplete: () => {
+                      textureloadedStore.changeloaderComplete(true);
+                      setLetterIconOpacity.value = true;
                       setTimeout(() => {
-                        textureloadedStore.changeloaderComplete(true);
-                        setLetterIconOpacity.value = true;
-                      }, 500);
+                        timelineNone.value = true;
+                      }, 2000);
                     },
                   }
                 );
@@ -91,7 +103,11 @@ watch(
 
 onMounted(() => {
   textEl.value = document.getElementById("text");
-  letteringIcon.value = document.querySelector(".lettering-icon");
+  if (route.path.includes("reasons")) {
+    letteringIcon.value = document.querySelector(".reasons-lettering-icon");
+  } else {
+    letteringIcon.value = document.querySelector(".home-lettering-icon");
+  }
 
   let distance = textEl.value.getBoundingClientRect().bottom;
 
@@ -130,7 +146,7 @@ onMounted(() => {
   width: 100svw;
   height: 100dvh;
   &.is-loaded {
-    pointer-events: none;
+    display: none;
   }
 
   $colors: (
@@ -259,6 +275,10 @@ onMounted(() => {
     @include default-transitions(opacity);
     transition-duration: 0.5s;
 
+    &.is-hidden {
+      display: none;
+    }
+
     @media (max-width: 540px) {
       transform: translate3d(
           -50%,
@@ -286,6 +306,7 @@ onMounted(() => {
     &.has-opacity {
       --lettering-opacity: 0;
       --lettering-icon-scale: 10;
+
       transition: transform 2s ease-in-out, opacity 1s ease-in-out;
       transition-delay: 0.45s;
     }

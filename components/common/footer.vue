@@ -5,7 +5,7 @@
       'footer flex-center justify-between',
       {
         'is-invisible':
-          textureStore.textureIndex !== null &&
+          textureStore.textureIndex !== null ||
           textureloadedStore.mountedTexture !== null,
       },
     ]"
@@ -64,18 +64,18 @@ const textureloadedStore = useTextureLoaderStore();
       position: absolute;
       content: "";
       border-radius: 8px;
-      background-color: var(--take-care-bg, var(--color-white));
-      opacity: 0.2;
+      background: rgba(124, 124, 124, 0.3);
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
       z-index: -1;
-      backdrop-filter: blur(10px);
+      opacity: var(--background-opacity, 1);
+      backdrop-filter: blur(8px);
     }
 
     @include parent-state(".is-invisible") {
-      --take-care-bg: var(--color-evex-gray);
+      --background-opacity: 0;
       --visit-opacity: 1;
     }
   }
