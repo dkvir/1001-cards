@@ -6,7 +6,8 @@
       {
         'is-invisible':
           textureStore.textureIndex !== null ||
-          textureloadedStore.mountedTexture !== null,
+          textureloadedStore.mountedTexture !== null ||
+          textureStore.reasonIndex,
       },
     ]"
   >

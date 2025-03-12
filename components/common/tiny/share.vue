@@ -5,7 +5,8 @@
       :class="{
         'is-invisible':
           textureStore.textureIndex == null &&
-          textureloadedStore.mountedTexture == null,
+          textureloadedStore.mountedTexture == null &&
+          textureStore.reasonIndex == null,
       }"
       @click.prevent="clickShareFb"
     >
@@ -17,7 +18,8 @@
       :class="{
         'is-invisible':
           textureStore.textureIndex == null &&
-          textureloadedStore.mountedTexture == null,
+          textureloadedStore.mountedTexture == null &&
+          textureStore.reasonIndex == null,
         'is-hidden': !isMobile,
       }"
       @click.prevent="clickShareMessenger"

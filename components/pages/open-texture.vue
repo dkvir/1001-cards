@@ -5,7 +5,8 @@
       {
         'is-active':
           textureStore.textureIndex !== null ||
-          textureloadedStore.mountedTexture !== null,
+          textureloadedStore.mountedTexture !== null ||
+          textureStore.reasonIndex,
       },
     ]"
   >
@@ -40,11 +41,38 @@ watch(
       router.push({
         path: route.path,
         query: {
-          imageLink: `/100-back-${textureStore.textureAtlasIndex}/${currId}.webp`,
+          imageLink: imageLink.value,
         },
       });
 
-      useChangeSeo(currId, textureStore.textureAtlasIndex);
+      useChangeSeo(imageLink.value);
+    } else {
+      router.push({
+        path: route.path,
+        query: {},
+      });
+      useChangeSeo();
+      setTimeout(() => {
+        imageLink.value = null;
+      }, 500);
+    }
+  }
+);
+
+watch(
+  () => textureStore.reasonIndex,
+  (curr) => {
+    if (curr !== null) {
+      imageLink.value = `/images/1001-back/${curr}.webp`;
+
+      router.push({
+        path: route.path,
+        query: {
+          imageLink: imageLink.value,
+        },
+      });
+
+      useChangeSeo(imageLink.value);
     } else {
       router.push({
         path: route.path,
@@ -70,6 +98,7 @@ watch(
 
 const closeTexture = () => {
   textureStore.changeTextureIndex(null);
+  textureStore.changeReasonIndex(null);
   textureStore.toggleShare(false);
   if (textureloadedStore.mountedTexture) {
     textureloadedStore.changeMountedTexture(null);

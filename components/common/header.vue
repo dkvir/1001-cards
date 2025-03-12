@@ -6,7 +6,8 @@
         {
           'has-background':
             textureStore.textureIndex == null &&
-            textureloadedStore.mountedTexture == null,
+            textureloadedStore.mountedTexture == null &&
+            textureStore.reasonIndex == null,
         },
       ]"
     >
@@ -18,7 +19,8 @@
         {
           'has-opacity':
             textureStore.textureIndex !== null ||
-            textureloadedStore.mountedTexture !== null,
+            textureloadedStore.mountedTexture !== null ||
+            textureStore.reasonIndex,
         },
       ]"
     >

@@ -6,7 +6,8 @@
         {
           'has-blur':
             textureStore.textureIndex !== null ||
-            textureLoadStore.mountedTexture !== null,
+            textureLoadStore.mountedTexture !== null ||
+            textureStore.reasonIndex,
           'change-cursor': textureStore.changeCursor,
         },
       ]"

@@ -7,6 +7,7 @@
     <common-tiny-drag-navigator />
     <common-page-transitions />
     <pages-three />
+    <pages-open-texture />
   </div>
 </template>
 

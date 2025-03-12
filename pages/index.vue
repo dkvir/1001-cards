@@ -1,7 +1,5 @@
 <template>
-  <div class="home-page">
-    <pages-open-texture />
-  </div>
+  <div class="home-page"></div>
 </template>
 
 <script setup>

@@ -9,7 +9,12 @@
   >
     <nuxt-icon name="1001-reasons" class="reasons-icon flex-center" filled />
     <ul class="list">
-      <li v-for="(item, index) in use1001Copy()" :key="index" class="item">
+      <li
+        v-for="(item, index) in use1001Copy()"
+        :key="index"
+        @click="changeReasonIndex(index)"
+        class="item"
+      >
         <pages-tiny-reason-item :item="item" :index="index" />
       </li>
     </ul>
@@ -19,9 +24,11 @@
 <script setup>
 import gsap from "gsap";
 import { usePageLink } from "@/store/page-link";
+import { useTextureStore } from "@/store/texture";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureloadedStore = useTextureLoaderStore();
+const textureStore = useTextureStore();
 const pageLink = usePageLink();
 
 watch(
@@ -70,6 +77,10 @@ function gsapTransforms() {
     ease: "power3.out",
   });
 }
+
+const changeReasonIndex = (index) => {
+  textureStore.changeReasonIndex(index + 1);
+};
 </script>
 
 <style lang="scss" scoped>
