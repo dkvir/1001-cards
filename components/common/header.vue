@@ -71,6 +71,7 @@ const textureloadedStore = useTextureLoaderStore();
     }
   }
   .buttons {
+    pointer-events: all;
     &.has-opacity {
       opacity: 0;
       pointer-events: none;
