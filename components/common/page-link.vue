@@ -29,6 +29,7 @@ const startPageChange = (event, to) => {
   if (route.path !== "/" && to !== "/reasons") pageLink.changePageLoading(true);
 
   pageLink.changeCurrentPage(to);
+  pageLink.changePointerEvents(true);
 };
 </script>
 

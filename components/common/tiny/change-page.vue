@@ -9,6 +9,7 @@
         {
           'has-margin': link.hasMargin,
           'is-active': pageLink.currentPage == link.path,
+          'pointer-events': pageLink.pointerEvents,
         },
       ]"
     >
@@ -22,6 +23,8 @@ import { usePageLink } from "@/store/page-link";
 
 const pageLink = usePageLink();
 const route = useRoute();
+
+pageLink.changeCurrentPage(route.path);
 
 const links = [
   {
@@ -51,6 +54,7 @@ const links = [
     padding: css-clamp-vw(3px, 5px, 768);
     margin-right: css-clamp-vw(8px, 20px, 768);
   }
+
   &::before {
     content: "";
     position: absolute;
@@ -74,6 +78,17 @@ const links = [
       );
     }
 
+    &.pointer-events {
+      pointer-events: none;
+    }
+
+    &.has-margin {
+      margin-right: 8px;
+      @include mq(max-width 768px) {
+        margin-right: css-clamp-vw(3px, 8px, 768);
+      }
+    }
+
     &::before {
       content: "";
       position: absolute;
@@ -92,12 +107,7 @@ const links = [
       --button-bg: var(--color-evex-blue);
       --stroke-color: var(--color-white);
     }
-    &.has-margin {
-      margin-right: 8px;
-      @include mq(max-width 768px) {
-        margin-right: css-clamp-vw(3px, 8px, 768);
-      }
-    }
+
     :deep(.page-icon) {
       display: block;
       height: 40%;

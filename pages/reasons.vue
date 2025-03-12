@@ -51,6 +51,7 @@ onMounted(() => {
 
   setTimeout(() => {
     pageLink.changePageLoading(false);
+    pageLink.changePointerEvents(false);
   }, 500);
 });
 

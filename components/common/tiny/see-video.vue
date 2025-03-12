@@ -24,7 +24,6 @@ const textureloadedStore = useTextureLoaderStore();
   padding: 0 12px;
   text-decoration: none;
   border-radius: 8px;
-  pointer-events: all;
 
   &:hover {
     --play-button-stroke: var(--color-white);

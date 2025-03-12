@@ -494,6 +494,7 @@ export const useCardsGallery = class App {
       },
       onComplete: () => {
         this.textureLoader.changeIsZoomedStatus(true);
+        this.pageLink.changePointerEvents(false);
       },
     });
   }
