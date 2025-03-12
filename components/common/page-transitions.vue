@@ -24,6 +24,8 @@ watch(
         },
         {
           "--clip-path-top": "0%",
+          duration: 0.7,
+          ease: "power4.out",
           onComplete: () => {
             router.push(pageLink.currentPage);
           },
@@ -37,6 +39,8 @@ watch(
         },
         {
           "--clip-path-bottom": "0%",
+          duration: 0.7,
+          ease: "power4.out",
           onComplete: () => {
             gsap.to(".page-transition", {
               clearProps: "all",
