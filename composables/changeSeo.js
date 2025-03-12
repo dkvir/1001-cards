@@ -1,5 +1,4 @@
 export const useChangeSeo = (imageLink) => {
-  console.log(imageLink);
   const route = useRoute();
   const config = useRuntimeConfig();
 

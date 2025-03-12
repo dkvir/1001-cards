@@ -42,7 +42,6 @@ export const useTextureLoaderStore = defineStore("textureLoaderStore", {
       this.isZoomed = status;
     },
     changeMountedTexture(link) {
-      console.log(link);
       this.mountedTexture = link;
     },
   },
