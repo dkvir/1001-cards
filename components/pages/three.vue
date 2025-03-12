@@ -1,5 +1,5 @@
 <template>
-  <div class="three">
+  <div :class="['three', { 'is-paused': rendererPaused }]">
     <canvas
       :class="[
         'canvas',
@@ -8,7 +8,6 @@
             textureStore.textureIndex !== null ||
             textureLoadStore.mountedTexture !== null,
           'change-cursor': textureStore.changeCursor,
-          'is-paused': rendererPaused,
         },
       ]"
     ></canvas>
@@ -83,8 +82,10 @@ const atlasUrls = [
   "/images/atlases/atlas-10.webp",
 ];
 
-const ramdonAtlas = getRandomAtlas(atlasUrls);
-textureLoadStore.preloadTexture(ramdonAtlas);
+onBeforeMount(() => {
+  const ramdonAtlas = getRandomAtlas(atlasUrls);
+  textureLoadStore.preloadTexture(ramdonAtlas);
+});
 
 function getRandomAtlas(arr) {
   const randomIndex = Math.floor(Math.random() * arr.length);
@@ -101,6 +102,10 @@ function getRandomAtlas(arr) {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  &.is-paused {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   .canvas {
     width: 100%;
@@ -112,10 +117,6 @@ function getRandomAtlas(arr) {
     }
     &.change-cursor {
       cursor: pointer;
-    }
-    &.is-paused {
-      opacity: 0;
-      pointer-events: none;
     }
   }
 

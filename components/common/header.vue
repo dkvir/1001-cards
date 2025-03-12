@@ -12,7 +12,16 @@
     >
       <nuxt-icon name="logo" filled />
     </div>
-    <div class="buttons flex-center">
+    <div
+      :class="[
+        'buttons flex-center',
+        {
+          'has-opacity':
+            textureStore.textureIndex !== null ||
+            textureloadedStore.mountedTexture !== null,
+        },
+      ]"
+    >
       <common-tiny-change-page />
       <common-tiny-see-video />
     </div>
@@ -57,6 +66,12 @@ const textureloadedStore = useTextureLoaderStore();
         height: 100%;
         width: auto;
       }
+    }
+  }
+  .buttons {
+    &.has-opacity {
+      opacity: 0;
+      pointer-events: none;
     }
   }
 }

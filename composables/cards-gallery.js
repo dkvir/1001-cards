@@ -502,7 +502,7 @@ export const useCardsGallery = class App {
       x: 0,
       y: 0,
       z: 50,
-      duration: 2,
+      duration: 1,
       ease: "power2.inOut",
       onUpdate: () => {
         this.orbit.target.set(

@@ -2,14 +2,7 @@
   <a
     href="https://www.facebook.com/share/v/19yjYHsM37/?mibextid=wwXIfr"
     target="_blank"
-    :class="[
-      'see-video flex-center',
-      {
-        'has-opacity':
-          textureStore.textureIndex !== null ||
-          textureloadedStore.mountedTexture !== null,
-      },
-    ]"
+    class="see-video flex-center"
   >
     <nuxt-icon name="play-button" class="play-button" filled />
     <div class="play-video-text uppercase">ნახე ვიდეო</div>
@@ -31,7 +24,6 @@ const textureloadedStore = useTextureLoaderStore();
   padding: 0 12px;
   text-decoration: none;
   border-radius: 8px;
-  opacity: var(--play-video-opacity, 1);
   pointer-events: all;
 
   &:hover {
@@ -64,11 +56,6 @@ const textureloadedStore = useTextureLoaderStore();
     background-color: var(--after-bg, var(--color-eleonor));
     @include size(calc(100% - 6px));
     @include default-transitions(background-color);
-  }
-
-  &.has-opacity {
-    --play-video-opacity: 0;
-    pointer-events: none;
   }
 
   .play-video-text {
