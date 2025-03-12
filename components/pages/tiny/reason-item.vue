@@ -39,7 +39,8 @@ const getCardId = (cardIndex) => {
 
 <style lang="scss" scoped>
 .reason-item {
-  padding: 42px 0;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--color-border);
   .number {
     :deep(.number-icon) {
       svg {
@@ -53,12 +54,14 @@ const getCardId = (cardIndex) => {
       font-size: 48px;
       line-height: 1;
       color: var(--color-evex-green);
+      letter-spacing: -3px;
     }
   }
   .reason {
     margin-left: 70px;
     font-size: 28px;
     font-family: var(--font-ping-regular);
+    color: var(--color-evex-green);
   }
 }
 </style>

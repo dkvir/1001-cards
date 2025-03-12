@@ -105,7 +105,6 @@ const changeReasonIndex = (index) => {
   }
 
   .item {
-    border-bottom: 1px solid var(--color-border);
     cursor: pointer;
     overflow: hidden;
     &:hover {
