@@ -17,17 +17,58 @@
 </template>
 
 <script setup>
+import gsap from "gsap";
 import { usePageLink } from "@/store/page-link";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureloadedStore = useTextureLoaderStore();
 const pageLink = usePageLink();
 
+watch(
+  () => pageLink.loading,
+  (curr, prev) => {
+    if (!curr) {
+      gsapTransforms();
+    }
+  }
+);
+
+watch(
+  () => textureloadedStore.loaderComplete,
+  (curr) => {
+    gsapTransforms();
+  }
+);
+
 onMounted(() => {
+  gsap.set(".first-ten-reason", {
+    yPercent: 100,
+  });
+
+  gsap.set(".reasons .reasons-icon", {
+    opacity: 0,
+  });
+
   setTimeout(() => {
     pageLink.changePageLoading(false);
   }, 500);
 });
+
+function gsapTransforms() {
+  gsap.to(".reasons .reasons-icon", {
+    opacity: 1,
+    duration: 0.6,
+    delay: 0.3,
+    ease: "power2.in",
+  });
+  gsap.to(".first-ten-reason", {
+    yPercent: 0,
+    duration: 1,
+    delay: 0.5,
+    stagger: 0.1,
+    ease: "power3.out",
+  });
+}
 </script>
 
 <style lang="scss" scoped>

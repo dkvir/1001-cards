@@ -8,7 +8,7 @@
         'nuxt-link flex-center',
         {
           'has-margin': link.hasMargin,
-          'is-active': route.path == link.path,
+          'is-active': pageLink.currentPage == link.path,
         },
       ]"
     >
@@ -18,6 +18,9 @@
 </template>
 
 <script setup>
+import { usePageLink } from "@/store/page-link";
+
+const pageLink = usePageLink();
 const route = useRoute();
 
 const links = [
