@@ -94,14 +94,14 @@ const changeReasonIndex = (index) => {
     overflow: auto;
   }
   :deep(.reasons-icon) {
-    padding-top: calc(var(--app-header-height) + 70px);
+    padding-top: calc(var(--app-header-height) + 30px);
     svg {
-      height: 352px;
+      height: 300px;
       width: auto;
     }
   }
   .list {
-    padding: 110px 0;
+    padding: 60px 0;
   }
 
   .item {

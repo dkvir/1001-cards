@@ -39,19 +39,25 @@ const getCardId = (cardIndex) => {
 
 <style lang="scss" scoped>
 .reason-item {
-  padding: 70px 0;
+  padding: 42px 0;
   .number {
+    :deep(.number-icon) {
+      svg {
+        height: 16px;
+        width: auto;
+      }
+    }
     .reason-id {
       margin-left: 12px;
       font-family: var(--font-evex-regular);
-      font-size: 72px;
+      font-size: 48px;
       line-height: 1;
       color: var(--color-evex-green);
     }
   }
   .reason {
     margin-left: 70px;
-    font-size: 34px;
+    font-size: 28px;
     font-family: var(--font-ping-regular);
   }
 }
