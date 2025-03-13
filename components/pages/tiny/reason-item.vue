@@ -39,8 +39,12 @@ const getCardId = (cardIndex) => {
 
 <style lang="scss" scoped>
 .reason-item {
-  padding: 30px 0;
+  padding: 30px 10px;
   border-bottom: 1px solid var(--color-border);
+
+  &:first-child {
+    border-top: 1px solid var(--color-border);
+  }
 
   @include mq(max-width 500px) {
     position: relative;

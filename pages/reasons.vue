@@ -14,8 +14,8 @@
         v-for="(item, index) in use1001Copy()"
         :key="index"
         @click="changeReasonIndex(index)"
-        @mouseenter="handleMouseEnter(index)"
-        @mouseleave="handleMouseLeave()"
+        @mouseenter="(event) => handleMouseEnter(index, event)"
+        @mouseleave="(event) => handleMouseLeave(event)"
         class="item"
       >
         <pages-tiny-reason-item :item="item" :index="index" />
@@ -53,14 +53,16 @@ const handleMouseMove = (event) => {
   });
 };
 
-const handleMouseEnter = (index) => {
+const handleMouseEnter = (index, e) => {
   hoveredItemIndex.value = index;
   hoveredImageLink.value = reasonsArray[index]?.image;
+  useReasonsHover.mouseEnter(e);
 };
 
-const handleMouseLeave = () => {
+const handleMouseLeave = (e) => {
   hoveredItemIndex.value = null;
   hoveredImageLink.value = null;
+  useReasonsHover.mouseLeave(e);
 };
 
 watch(
@@ -144,8 +146,25 @@ const changeReasonIndex = (index) => {
   }
 
   .item {
+    position: relative;
     cursor: pointer;
     overflow: hidden;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      @include size(100%);
+      background-color: var(--color-yellow);
+      transform: translate3d(
+        0,
+        var(--item-link-transform-end, var(--item-link-transform-start, -105%)),
+        0
+      );
+      transition: transform 0.25s ease;
+      transition-delay: 0ms;
+    }
     &:hover {
       --arrow-bg: var(--color-evex-green);
       --stroke-color: var(--color-white);
