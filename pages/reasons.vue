@@ -23,11 +23,7 @@
     </ul>
     <div
       :class="['hover-image', { 'hover-image-visible': hoveredImageLink }]"
-      :style="{
-        left: `${cursorPosition.x}px`,
-        top: `${cursorPosition.y}px`,
-        transform: 'translate(20%, -70%)',
-      }"
+      :style="`--transform-x: calc(${cursorPosition.x}px + 20%); --transform-y: calc(${cursorPosition.y}px - 70%)`"
     >
       <img :src="hoveredImageLink" />
     </div>
@@ -52,8 +48,8 @@ const cursorPosition = ref({ x: 0, y: 0 });
 
 const handleMouseMove = (event) => {
   gsap.to(cursorPosition.value, {
-    x: event.clientX,
-    y: event.clientY,
+    x: event.clientX - window.innerWidth / 2,
+    y: event.clientY - window.innerHeight / 2,
   });
 };
 
@@ -162,19 +158,26 @@ const changeReasonIndex = (index) => {
     left: 50%;
     pointer-events: none;
     z-index: 100;
-    opacity: 0;
+    opacity: var(--image-opacity, 0);
     width: css-clamp(262px, 375px);
     height: css-clamp(367px, 525px);
+    border-radius: 12px;
+    overflow: hidden;
+    transform: translate3d(
+      var(--transform-x, -50%),
+      var(--transform-y, -50%),
+      0
+    );
+    @include default-transitions(opacity);
 
     &.hover-image-visible {
-      opacity: 1;
+      --image-opacity: 1;
     }
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
     }
   }
 }
