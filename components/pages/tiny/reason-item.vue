@@ -41,6 +41,14 @@ const getCardId = (cardIndex) => {
 .reason-item {
   padding: 30px 0;
   border-bottom: 1px solid var(--color-border);
+
+  @include mq(max-width 500px) {
+    position: relative;
+    flex-direction: column;
+    align-items: baseline;
+    padding: 22px 0;
+  }
+
   .number {
     :deep(.number-icon) {
       svg {
@@ -58,10 +66,20 @@ const getCardId = (cardIndex) => {
     }
   }
   .reason {
-    margin-left: 70px;
-    font-size: 28px;
+    margin-left: css-clamp(40px, 70px);
+    font-size: css-clamp(16px, 28px);
     font-family: var(--font-ping-regular);
     color: var(--color-evex-green);
+
+    @include mq(max-width 768px) {
+      width: css-clamp-vw(283px, 500px, 768);
+      margin-left: css-clamp-vw(0px, 40px, 768);
+      margin-right: 20px;
+    }
+
+    @include mq(max-width 500px) {
+      width: 283px;
+    }
   }
 }
 </style>

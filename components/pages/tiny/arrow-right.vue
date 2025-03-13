@@ -12,6 +12,13 @@
 .arrow-right {
   --arrow-box-size: 40px;
 
+  @include mq(max-width 500px) {
+    position: absolute;
+    inset: 0;
+    top: 28px;
+    --arrow-box-size: #{css-clamp-vw(28px, 40px, 500)};
+  }
+
   margin-left: auto;
   border: 2px solid var(--color-evex-green);
   border-radius: 5px;
