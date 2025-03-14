@@ -8,6 +8,7 @@
           textureloadedStore.mountedTexture == null &&
           textureStore.reasonIndex == null &&
           searchVisibility,
+        'is-darker': natali,
       },
     ]"
   >
@@ -21,6 +22,8 @@
       placeholder="მოძებნე მიზეზი"
       @input="restrictInput"
       @keyup.enter="handleSearch"
+      @focus="focusInput"
+      @blur="unfocus"
     />
     <nuxt-icon
       name="search-arrow"
@@ -40,6 +43,7 @@ const searchStore = useSearchStore();
 const textureStore = useTextureStore();
 const textureloadedStore = useTextureLoaderStore();
 const route = useRoute();
+const natali = ref(false);
 
 const searchQuery = ref("");
 
@@ -71,6 +75,14 @@ const restrictInput = () => {
 const handleSearch = () => {
   searchStore.changeSearchValue(searchQuery.value);
 };
+
+const focusInput = () => {
+  natali.value = true;
+};
+
+const unfocus = () => {
+  natali.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -98,16 +110,21 @@ const handleSearch = () => {
     z-index: -1;
     opacity: var(--background-opacity, 1);
     backdrop-filter: blur(8px);
+
+    @include default-transitions(background);
   }
 
   &.is-visible {
     --search-opacity: 1;
   }
 
-  .search-input:focus {
+  &.is-darker {
+    --input-opacity: 0.6;
+  }
+
+  .search:focus-within {
     outline: none;
     text-align: left;
-    opacity: 1;
   }
 
   .search-input[type="number"]::-webkit-outer-spin-button,
@@ -126,13 +143,13 @@ const handleSearch = () => {
 
   .search-text {
     font-size: 20px;
-    color: var(--color-black);
+    color: var(--color-evex-green);
     opacity: 0.3;
   }
 
   .search-input {
     font-size: 20px;
-    color: var(--color-black);
+    color: var(--color-evex-green);
   }
 
   :deep(.search-icon) {
