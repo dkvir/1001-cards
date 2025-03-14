@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="target"
     :class="[
       'search flex justify-between',
       {
@@ -9,32 +10,30 @@
           textureStore.reasonIndex == null &&
           searchVisibility,
         'is-darker': natali,
+        'is-mobile-opened': openSearchMobile,
       },
     ]"
   >
-    <div class="search-icon-wrapper flex justify-center">
-      <nuxt-icon name="search" class="search-icon-small" filled />
+    <div @click="openMobileSearch" class="search-icon-wrapper flex-center">
+      <nuxt-icon name="search" class="search-icon" filled />
     </div>
-
-    <nuxt-icon name="search" class="search-icon" filled />
-    <input
-      v-model="searchQuery"
-      class="search-input"
-      type="number"
-      :min="1"
-      :max="1001"
-      placeholder="მოძებნე მიზეზი"
-      @input="restrictInput"
-      @keyup.enter="handleSearch"
-      @focus="focusInput"
-      @blur="unfocus"
-    />
-    <nuxt-icon
-      name="search-arrow"
-      class="search-arrow"
-      filled
-      @click="handleSearch"
-    />
+    <div class="input-parent flex-center justify-between">
+      <input
+        v-model="searchQuery"
+        class="search-input"
+        type="number"
+        :min="1"
+        :max="1001"
+        placeholder="მოძებნე მიზეზი"
+        @input="restrictInput"
+        @keyup.enter="handleSearch"
+        @focus="focusInput"
+        @blur="unfocus"
+      />
+      <div @click="handleSearch" class="search-arrow">
+        <nuxt-icon name="search-arrow" filled />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,17 +41,22 @@
 import { useTextureStore } from "@/store/texture";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
 import { useSearchStore } from "~/store/search";
+import { onClickOutside } from "@vueuse/core";
+import { useTemplateRef } from "vue";
+
+const target = useTemplateRef("target");
+
+const emit = defineEmits(["transformVisit"]);
 
 const searchStore = useSearchStore();
 const textureStore = useTextureStore();
 const textureloadedStore = useTextureLoaderStore();
 const route = useRoute();
 const natali = ref(false);
+const openSearchMobile = ref(false);
 
 const searchQuery = ref("");
-
 const searchVisibility = ref(null);
-
 const isMobile = ref(false);
 
 const checkViewportSize = () => {
@@ -89,6 +93,10 @@ const restrictInput = () => {
 
 const handleSearch = () => {
   searchStore.changeSearchValue(searchQuery.value);
+  if (window.innerWidth <= 425) {
+    openSearchMobile.value = !openSearchMobile.value;
+    emit("transformVisit", openSearchMobile.value);
+  }
 };
 
 const focusInput = () => {
@@ -98,46 +106,47 @@ const focusInput = () => {
 const unfocus = () => {
   natali.value = false;
 };
+
+const openMobileSearch = () => {
+  if (window.innerWidth <= 425) {
+    openSearchMobile.value = !openSearchMobile.value;
+    emit("transformVisit", openSearchMobile.value);
+  }
+};
+
+onClickOutside(target, (event) => {
+  openMobileSearch();
+});
 </script>
 
 <style lang="scss" scoped>
 .search {
-  align-items: center;
-  width: 280px;
+  --icon-padding: 5px;
+  --icon-sizes: calc(var(--app-header-height) - 2 * var(--icon-padding));
+
+  position: relative;
+  width: var(--search-width, 320px);
   height: 100%;
   border-radius: 8px;
-  padding-left: 16px;
-  padding-right: 6px;
+  padding: var(--icon-padding);
+  padding-left: calc(css-clamp(12px, 16px) + var(--icon-sizes));
   opacity: var(--search-opacity, 0);
-  position: relative;
   pointer-events: all;
-  font-family: var(--font-ping-regular);
+  overflow: hidden;
+  @include default-transitions(width);
 
-  &::before {
-    position: absolute;
-    content: "";
-    border-radius: inherit;
-    background: rgba(124, 124, 124, var(--input-opacity, 0.3));
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-    opacity: var(--background-opacity, 1);
-    backdrop-filter: blur(8px);
-
-    @include default-transitions(background);
-  }
-
-  @include mq(max-width 600px) {
-    width: 50%;
+  @include mq(max-width 768px) {
+    width: var(--search-width, 200px);
   }
 
   @include mq(max-width 425px) {
-    width: auto;
-    align-items: center;
+    --search-width: var(--app-header-height);
+
+    position: absolute;
+    right: var(--page-offset-padding);
+    bottom: 0;
+    padding-left: calc(var(--icon-sizes));
     border-radius: 4px;
-    padding: 5px;
   }
 
   &.is-visible {
@@ -147,99 +156,86 @@ const unfocus = () => {
   &.is-darker {
     --input-opacity: 0.6;
   }
-
-  .search:focus-within {
-    outline: none;
-    text-align: left;
+  &.is-mobile-opened {
+    --search-width: calc(100% - 2 * var(--page-offset-padding));
   }
 
-  .search-input[type="number"]::-webkit-outer-spin-button,
-  .search-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: rgba(124, 124, 124, var(--input-opacity, 0.3));
+    z-index: -1;
+    opacity: var(--background-opacity, 1);
+    backdrop-filter: blur(8px);
 
-  .search-input[type="number"] {
-    -moz-appearance: textfield;
-  }
-
-  .search-input:focus::placeholder {
-    opacity: 0;
-  }
-
-  .search-text {
-    font-size: css-clamp(16px, 20px);
-    color: var(--color-evex-green);
-    font-family: var(--font-ping-regular);
-    opacity: 0.3;
-
-    @include mq(max-width 1024px) {
-      font-size: css-clamp-vw(13px, 16px, 1024);
-    }
-  }
-
-  .search-input {
-    font-size: css-clamp(16px, 20px);
-    color: var(--color-evex-green);
-    font-family: var(--font-ping-regular);
-
-    @include mq(max-width 1024px) {
-      font-size: css-clamp-vw(12px, 16px, 1024);
-    }
-
-    @include mq(max-width 425px) {
-      display: none;
-      position: absolute;
-    }
+    @include default-transitions(background);
   }
 
   .search-icon-wrapper {
-    padding: 7px;
-    background-color: var(--color-eleonor);
-    border-radius: 2px;
-    :deep(.search-icon-small) {
-      svg {
-        @include size(13px);
-      }
-    }
-
-    @include mq(min-width 426px) {
-      display: none;
-    }
-  }
-
-  :deep(.search-icon) {
-    padding-right: css-clamp(8px, 16px);
-    svg {
-      @include size(24px);
-      @include mq(max-width 768px) {
-        @include size(16px);
-      }
-      @include mq(max-width 425px) {
-        display: none;
-      }
-    }
-  }
-
-  :deep(.search-arrow) {
-    margin-left: auto;
-    cursor: pointer;
-    &:hover {
-      --hover-color: var(--color-yellow);
-    }
-
-    svg {
-      @include size(calc(var(--app-header-height) - 10px));
-
-      rect {
-        @include default-transitions(fill);
-        fill: var(--hover-color, var(--color-eleonor));
-      }
-    }
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate3d(0, -50%, 0);
+    margin-left: css-clamp(12px, 16px);
+    @include size(var(--icon-sizes));
+    background-color: var(--search-icon-bg, transparent);
+    border-radius: 4px;
 
     @include mq(max-width 425px) {
-      display: none;
-      position: absolute;
+      --search-icon-bg: var(--color-eleonor);
+      margin-left: var(--icon-padding);
+    }
+
+    :deep(.search-icon) {
+      svg {
+        @include size(css-clamp(18px, 24px));
+        @include mq(max-width 768px) {
+          @include size(css-clamp-vw(14px, 18px, 768));
+        }
+      }
+    }
+  }
+
+  .input-parent {
+    width: 100%;
+    .search-input {
+      font-size: css-clamp(16px, 20px);
+      color: var(--color-evex-green);
+      font-family: var(--font-ping-regular);
+      margin-left: css-clamp(8px, 16px);
+      width: calc(100% - var(--icon-sizes));
+      @include mq(max-width 1024px) {
+        font-size: css-clamp-vw(12px, 16px, 1024);
+      }
+
+      &:focus::placeholder {
+        opacity: 0;
+      }
+
+      &[type="number"]::-webkit-outer-spin-button,
+      &[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+
+    :deep(.search-arrow) {
+      cursor: pointer;
+      background-color: var(--hover-color, var(--color-eleonor));
+      border-radius: 8px;
+      @include size(var(--icon-sizes));
+      @include default-transitions(background-color);
+
+      &:hover {
+        --hover-color: var(--color-yellow);
+      }
+      svg {
+        fill: var(--color-black);
+      }
     }
   }
 }

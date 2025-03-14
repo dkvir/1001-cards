@@ -7,6 +7,7 @@
           textureStore.textureIndex == null &&
           textureloadedStore.mountedTexture == null &&
           textureStore.reasonIndex == null,
+        'transform-visit': transformVisit,
       },
     ]"
   >
@@ -34,6 +35,12 @@
 import { useTextureStore } from "@/store/texture";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
+const props = defineProps({
+  transformVisit: {
+    type: Boolean,
+  },
+});
+
 const textureStore = useTextureStore();
 const textureloadedStore = useTextureLoaderStore();
 
@@ -57,6 +64,17 @@ onMounted(() => {
   padding: 5px;
   pointer-events: all;
   height: var(--app-header-height);
+  transform: translate3d(var(--visit-transform-x, 0), 0, 0);
+  @include default-transitions(transform);
+  @include mq(max-width 425px) {
+    position: absolute;
+    left: var(--page-offset-padding);
+    bottom: 0;
+  }
+
+  &.transform-visit {
+    --visit-transform-x: -200%;
+  }
 
   @media (max-width: 1024px) {
     opacity: var(--visit-opacity, 0);

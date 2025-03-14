@@ -13,8 +13,8 @@
   >
     <nuxt-icon class="take-care flex-center" name="take-care" filled />
     <common-tiny-share />
-    <common-tiny-search />
-    <common-tiny-visit />
+    <common-tiny-search @transformVisit="changeVisitTransform" />
+    <common-tiny-visit :transformVisit="transformVisit" />
   </div>
 </template>
 
@@ -24,6 +24,11 @@ import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
 const textureloadedStore = useTextureLoaderStore();
+const transformVisit = ref(false);
+
+const changeVisitTransform = (value) => {
+  transformVisit.value = value;
+};
 </script>
 
 <style lang="scss" scoped>
