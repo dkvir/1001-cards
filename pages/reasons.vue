@@ -14,8 +14,8 @@
         v-for="(item, index) in searchStore.getReasons"
         :key="index"
         @click="changeReasonIndex(index)"
-        @mouseenter="handleMouseEnter(index)"
-        @mouseleave="handleMouseLeave()"
+        @mouseenter="(event) => handleMouseEnter(index, event)"
+        @mouseleave="(event) => handleMouseLeave(event)"
         class="item"
       >
         <pages-tiny-reason-item :item="item" :index="index" />
@@ -23,11 +23,7 @@
     </ul>
     <div
       :class="['hover-image', { 'hover-image-visible': hoveredImageLink }]"
-      :style="{
-        left: `${cursorPosition.x}px`,
-        top: `${cursorPosition.y}px`,
-        transform: 'translate(20%, -70%)',
-      }"
+      :style="`--transform-x: calc(${cursorPosition.x}px + 20%); --transform-y: calc(${cursorPosition.y}px - 70%)`"
     >
       <img :src="hoveredImageLink" />
     </div>
@@ -53,19 +49,21 @@ const cursorPosition = ref({ x: 0, y: 0 });
 
 const handleMouseMove = (event) => {
   gsap.to(cursorPosition.value, {
-    x: event.clientX,
-    y: event.clientY,
+    x: event.clientX - window.innerWidth / 2,
+    y: event.clientY - window.innerHeight / 2,
   });
 };
 
-const handleMouseEnter = (index) => {
+const handleMouseEnter = (index, e) => {
   hoveredItemIndex.value = index;
   hoveredImageLink.value = reasonsArray[index]?.image;
+  useReasonsHover.mouseEnter(e);
 };
 
-const handleMouseLeave = () => {
+const handleMouseLeave = (e) => {
   hoveredItemIndex.value = null;
   hoveredImageLink.value = null;
+  useReasonsHover.mouseLeave(e);
 };
 
 watch(
@@ -149,8 +147,25 @@ const changeReasonIndex = (index) => {
   }
 
   .item {
+    position: relative;
     cursor: pointer;
     overflow: hidden;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      @include size(100%);
+      background-color: var(--color-yellow);
+      transform: translate3d(
+        0,
+        var(--item-link-transform-end, var(--item-link-transform-start, -105%)),
+        0
+      );
+      transition: transform 0.25s ease;
+      transition-delay: 0ms;
+    }
     &:hover {
       --arrow-bg: var(--color-evex-green);
       --stroke-color: var(--color-white);
@@ -163,19 +178,26 @@ const changeReasonIndex = (index) => {
     left: 50%;
     pointer-events: none;
     z-index: 100;
-    opacity: 0;
+    opacity: var(--image-opacity, 0);
     width: css-clamp(262px, 375px);
     height: css-clamp(367px, 525px);
+    border-radius: 12px;
+    overflow: hidden;
+    transform: translate3d(
+      var(--transform-x, -50%),
+      var(--transform-y, -50%),
+      0
+    );
+    @include default-transitions(opacity);
 
     &.hover-image-visible {
-      opacity: 1;
+      --image-opacity: 1;
     }
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
     }
   }
 }
