@@ -120,7 +120,7 @@ const changeReasonIndex = (index) => {
 
 <style lang="scss" scoped>
 .reasons {
-  padding: var(--page-offset-padding);
+  padding: var(--page-offset-padding) 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
