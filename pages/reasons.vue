@@ -11,7 +11,7 @@
     <nuxt-icon name="1001-reasons" class="reasons-icon flex-center" filled />
     <ul class="list">
       <li
-        v-for="(item, index) in use1001Copy()"
+        v-for="(item, index) in searchStore.getReasons"
         :key="index"
         @click="changeReasonIndex(index)"
         @mouseenter="handleMouseEnter(index)"
@@ -39,8 +39,9 @@ import gsap from "gsap";
 import { usePageLink } from "@/store/page-link";
 import { useTextureStore } from "@/store/texture";
 import { useTextureLoaderStore } from "@/store/texturesLoaded";
-import { ref } from "vue";
+import { useSearchStore } from "~/store/search";
 
+const searchStore = useSearchStore();
 const textureloadedStore = useTextureLoaderStore();
 const textureStore = useTextureStore();
 const pageLink = usePageLink();

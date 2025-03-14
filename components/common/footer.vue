@@ -13,6 +13,7 @@
   >
     <nuxt-icon class="take-care flex-center" name="take-care" filled />
     <common-tiny-share />
+    <common-tiny-search />
     <common-tiny-visit />
   </div>
 </template>
