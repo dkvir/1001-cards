@@ -15,7 +15,8 @@
       target="_blank"
       class="visit-link flex-center"
     >
-      <span class="uppercase">დაჯავშნე</span>
+      <span class="uppercase" v-if="isMobile">ვიზიტი ექიმთან</span>
+      <span class="uppercase" v-else>დაჯავშნე</span>
       <div class="arrow-wrapper flex-center">
         <nuxt-icon class="arrow visit-arrow-static" name="visit-arrow" filled />
         <nuxt-icon
@@ -35,6 +36,17 @@ import { useTextureLoaderStore } from "@/store/texturesLoaded";
 
 const textureStore = useTextureStore();
 const textureloadedStore = useTextureLoaderStore();
+
+const isMobile = ref(null);
+
+const checkViewportSize = () => {
+  isMobile.value = window.innerWidth <= 600;
+};
+
+onMounted(() => {
+  checkViewportSize();
+  window.addEventListener("resize", checkViewportSize);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -54,8 +66,8 @@ const textureloadedStore = useTextureLoaderStore();
   }
 
   @media (max-width: 600px) {
-    width: 100%;
     justify-content: space-between;
+    border-radius: 4px;
   }
 
   &::before {
@@ -106,6 +118,11 @@ const textureloadedStore = useTextureLoaderStore();
       font-size: css-clamp-vw(13px, 16px, 1024);
     }
 
+    @media (max-width: 600px) {
+      border-radius: 2px;
+      padding: 0 css-clamp(5px, 14px);
+    }
+
     &:hover {
       --arrow-static-transform: -100%;
       --arrow-animated-transform: 0;
@@ -121,6 +138,11 @@ const textureloadedStore = useTextureLoaderStore();
 
     @media (max-width: 1024px) {
       font-size: css-clamp-vw(13px, 16px, 1024);
+    }
+
+    @media (max-width: 600px) {
+      display: none;
+      position: absolute;
     }
 
     @media (max-width: 540px) {

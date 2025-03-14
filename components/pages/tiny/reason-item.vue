@@ -67,6 +67,10 @@ const getCardId = (cardIndex) => {
       line-height: 1;
       color: var(--color-evex-green);
       letter-spacing: -3px;
+
+      @include mq(max-width 768px) {
+        font-size: css-clamp-vw(40px, 48px, 768);
+      }
     }
   }
   .reason {

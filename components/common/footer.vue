@@ -38,8 +38,13 @@ const textureloadedStore = useTextureLoaderStore();
   font-family: var(--font-ping-regular);
   pointer-events: none;
 
+  @media (max-width: 1024px) {
+    flex-direction: row-reverse;
+  }
+
   @media (max-width: 600px) {
-    justify-content: center;
+    gap: 20px;
+    justify-content: space-between;
   }
 
   :deep(.take-care) {
@@ -56,6 +61,7 @@ const textureloadedStore = useTextureLoaderStore();
     @media (max-width: 1024px) {
       padding: 0 10px;
       opacity: var(--visit-opacity, 0);
+      position: absolute;
       @include default-transitions(opacity);
     }
     @media (max-width: 600px) {

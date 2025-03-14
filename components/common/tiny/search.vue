@@ -12,6 +12,10 @@
       },
     ]"
   >
+    <div class="search-icon-wrapper flex justify-center">
+      <nuxt-icon name="search" class="search-icon-small" filled />
+    </div>
+
     <nuxt-icon name="search" class="search-icon" filled />
     <input
       v-model="searchQuery"
@@ -48,6 +52,17 @@ const natali = ref(false);
 const searchQuery = ref("");
 
 const searchVisibility = ref(null);
+
+const isMobile = ref(false);
+
+const checkViewportSize = () => {
+  isMobile.value = window.innerWidth <= 600;
+};
+
+onMounted(() => {
+  checkViewportSize();
+  window.addEventListener("resize", checkViewportSize);
+});
 
 searchVisibility.value = route.path == "/reasons";
 
@@ -91,17 +106,17 @@ const unfocus = () => {
   width: 280px;
   height: 100%;
   border-radius: 8px;
-  padding: 19px 16px;
+  padding-left: 16px;
   padding-right: 6px;
-  gap: 16px;
   opacity: var(--search-opacity, 0);
   position: relative;
   pointer-events: all;
+  font-family: var(--font-ping-regular);
 
   &::before {
     position: absolute;
     content: "";
-    border-radius: 8px;
+    border-radius: inherit;
     background: rgba(124, 124, 124, var(--input-opacity, 0.3));
     top: 0;
     left: 0;
@@ -112,6 +127,17 @@ const unfocus = () => {
     backdrop-filter: blur(8px);
 
     @include default-transitions(background);
+  }
+
+  @include mq(max-width 600px) {
+    width: 50%;
+  }
+
+  @include mq(max-width 425px) {
+    width: auto;
+    align-items: center;
+    border-radius: 4px;
+    padding: 5px;
   }
 
   &.is-visible {
@@ -142,19 +168,56 @@ const unfocus = () => {
   }
 
   .search-text {
-    font-size: 20px;
+    font-size: css-clamp(16px, 20px);
     color: var(--color-evex-green);
+    font-family: var(--font-ping-regular);
     opacity: 0.3;
+
+    @include mq(max-width 1024px) {
+      font-size: css-clamp-vw(13px, 16px, 1024);
+    }
   }
 
   .search-input {
-    font-size: 20px;
+    font-size: css-clamp(16px, 20px);
     color: var(--color-evex-green);
+    font-family: var(--font-ping-regular);
+
+    @include mq(max-width 1024px) {
+      font-size: css-clamp-vw(12px, 16px, 1024);
+    }
+
+    @include mq(max-width 425px) {
+      display: none;
+      position: absolute;
+    }
+  }
+
+  .search-icon-wrapper {
+    padding: 7px;
+    background-color: var(--color-eleonor);
+    border-radius: 2px;
+    :deep(.search-icon-small) {
+      svg {
+        @include size(13px);
+      }
+    }
+
+    @include mq(min-width 426px) {
+      display: none;
+    }
   }
 
   :deep(.search-icon) {
+    padding-right: css-clamp(8px, 16px);
     svg {
       @include size(24px);
+      @include mq(max-width 768px) {
+        @include size(16px);
+      }
+      @include mq(max-width 425px) {
+        display: none;
+      }
     }
   }
 
@@ -172,6 +235,11 @@ const unfocus = () => {
         @include default-transitions(fill);
         fill: var(--hover-color, var(--color-eleonor));
       }
+    }
+
+    @include mq(max-width 425px) {
+      display: none;
+      position: absolute;
     }
   }
 }
