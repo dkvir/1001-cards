@@ -141,6 +141,13 @@ const changeReasonIndex = (index) => {
       }
     }
   }
+
+  .list:last-child {
+    border-bottom: 1px solid var(--color-yellow);
+    padding-bottom: 0;
+    margin-bottom: 60px;
+  }
+
   .list {
     padding: 60px 0;
 
