@@ -3,7 +3,6 @@
     :class="[
       'reason-item flex align-center',
       { 'first-ten-reason': index <= 10 },
-      { 'last-item': isLastItem },
     ]"
   >
     <div class="number flex align-center">
@@ -36,19 +35,11 @@ const getCardId = (cardIndex) => {
     return idToString;
   }
 };
-
-const isLastItem = computed(() => {
-  return props.index === totalItems - 1;
-});
 </script>
 
 <style lang="scss" scoped>
 .reason-item {
   padding: 30px var(--page-offset-padding);
-
-  .last-reason {
-    border-bottom: 1px solid var(--color-yellow);
-  }
 
   &:first-child {
     border-top: 1px solid var(--color-yellow);
