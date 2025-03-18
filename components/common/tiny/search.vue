@@ -234,6 +234,10 @@ onClickOutside(target, (event) => {
         opacity: 0;
       }
 
+      &::placeholder {
+        color: var(--color-evex-green);
+      }
+
       &[type="number"]::-webkit-outer-spin-button,
       &[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
