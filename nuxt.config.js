@@ -4,7 +4,7 @@ import favicon from "./config/favicon";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-  modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt", "nuxt-gtag"],
+  modules: ["@pinia/nuxt", "nuxt-icons", "@vueuse/nuxt", "nuxt-gtag", "@nuxtjs/device"],
   runtimeConfig: {
     public: {
       siteUrl: process.env.PUBLIC_SITE_URL,

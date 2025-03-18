@@ -91,8 +91,20 @@ watch(
   (curr) => {
     if (route.query.imageLink) {
       textureloadedStore.changeMountedTexture(route.query.imageLink);
-      imageLink.value = `/images/1001-folders-back` + route.query.imageLink;
+      imageLink.value = route.query.imageLink;
     }
+  }
+);
+
+watch(
+  () => textureloadedStore.loaderComplete,
+  (curr) => {
+    setTimeout(() => {
+      if (route.path == "/reasons" && route.query.imageLink) {
+        textureloadedStore.changeMountedTexture(route.query.imageLink);
+        imageLink.value = route.query.imageLink;
+      }
+    }, 500);
   }
 );
 

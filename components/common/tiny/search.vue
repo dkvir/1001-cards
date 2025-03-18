@@ -134,7 +134,7 @@ onClickOutside(target, (event) => {
   padding: var(--icon-padding);
   padding-left: calc(css-clamp(12px, 16px) + var(--icon-sizes));
   opacity: var(--search-opacity, 0);
-  pointer-events: all;
+  pointer-events: none;
   overflow: hidden;
   transition: width 0.45s ease-in-out;
 
@@ -154,6 +154,7 @@ onClickOutside(target, (event) => {
 
   &.is-visible {
     --search-opacity: 1;
+    pointer-events: all;
   }
 
   &.is-darker {

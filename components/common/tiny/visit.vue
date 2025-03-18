@@ -4,9 +4,9 @@
       'visit flex-center',
       {
         'is-invisible':
-          textureStore.textureIndex == null &&
-          textureloadedStore.mountedTexture == null &&
-          textureStore.reasonIndex == null,
+          textureStore.textureIndex !== null ||
+          textureloadedStore.mountedTexture !== null ||
+          textureStore.reasonIndex !== null,
         'transform-visit': transformVisit,
       },
     ]"
@@ -16,8 +16,8 @@
       target="_blank"
       class="visit-link flex-center"
     >
-      <span class="uppercase" v-if="isMobile">ვიზიტი ექიმთან</span>
-      <span class="uppercase" v-else>დაჯავშნე</span>
+      <span class="uppercase desktop-span">დაჯავშნე</span>
+      <span class="uppercase mobile-span">ვიზიტი ექიმთან</span>
       <div class="arrow-wrapper flex-center">
         <nuxt-icon class="arrow visit-arrow-static" name="visit-arrow" filled />
         <nuxt-icon
@@ -74,19 +74,24 @@ onMounted(() => {
     bottom: 0;
   }
 
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    border-radius: 4px;
+    padding: 3px;
+  }
+
   &.transform-visit {
     --visit-transform-y: calc(-100% - 8px);
   }
 
-  @media (max-width: 1024px) and (min-width: 426px) {
-    opacity: var(--visit-opacity, 0);
-    pointer-events: none;
-    padding: 3px;
-  }
+  &.is-invisible {
+    --visit-color: var(--color-evex-gray);
+    --visit-bg: var(--color-evex-gray);
 
-  @media (max-width: 600px) {
-    justify-content: space-between;
-    border-radius: 4px;
+    @media (max-width: 600px) {
+      opacity: var(--visit-opacity, 0);
+      pointer-events: none;
+    }
   }
 
   &::before {
@@ -101,16 +106,6 @@ onMounted(() => {
     backdrop-filter: blur(8px);
   }
 
-  &.is-invisible {
-    --visit-color: var(--color-evex-gray);
-    --visit-bg: var(--color-evex-gray);
-
-    @media (max-width: 1024px) {
-      pointer-events: all;
-      --visit-opacity: 1;
-    }
-  }
-
   .visit-link {
     position: relative;
     font-size: css-clamp(16px, 20px);
@@ -119,8 +114,18 @@ onMounted(() => {
     border-radius: 8px;
     padding: 0 css-clamp(14px, 20px);
     height: 100%;
-
     cursor: pointer;
+
+    .desktop-span {
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+    .mobile-span {
+      @media (min-width: 769px) {
+        display: none;
+      }
+    }
 
     &::before {
       content: "";
@@ -137,7 +142,7 @@ onMounted(() => {
       font-size: css-clamp-vw(13px, 16px, 1024);
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       border-radius: 2px;
       padding: 0 css-clamp(5px, 14px);
     }
@@ -159,13 +164,8 @@ onMounted(() => {
       font-size: css-clamp-vw(13px, 16px, 1024);
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       display: none;
-      position: absolute;
-    }
-
-    @media (max-width: 540px) {
-      font-size: css-clamp-vw(12px, 11px, 540);
     }
   }
 

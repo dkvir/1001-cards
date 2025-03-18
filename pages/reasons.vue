@@ -22,7 +22,13 @@
       </li>
     </ul>
     <div
-      :class="['hover-image', { 'hover-image-visible': hoveredImageLink }]"
+      :class="[
+        'hover-image',
+        {
+          'hover-image-visible': hoveredImageLink,
+          'is-mobile': $device.isMobileOrTablet,
+        },
+      ]"
       :style="`--transform-x: calc(${cursorPosition.x}px + 20%); --transform-y: calc(${cursorPosition.y}px - 70%)`"
       v-if="hoveredImageLink"
     >
@@ -204,6 +210,9 @@ const changeReasonIndex = (index) => {
 
     &.hover-image-visible {
       --image-opacity: 1;
+    }
+    &.is-mobile {
+      display: none;
     }
 
     img {
