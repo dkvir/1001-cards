@@ -127,6 +127,15 @@ onMounted(() => {
       }
     }
 
+    @media (max-width: 1024px) {
+      font-size: css-clamp-vw(14px, 16px, 1024);
+    }
+
+    @media (max-width: 768px) {
+      border-radius: 2px;
+      padding: 0 css-clamp(10px, 14px);
+    }
+
     &::before {
       content: "";
       position: absolute;
@@ -136,15 +145,6 @@ onMounted(() => {
       border-radius: inherit;
       opacity: 0.8;
       @include default-transitions(background-color);
-    }
-
-    @media (max-width: 1024px) {
-      font-size: css-clamp-vw(14px, 16px, 1024);
-    }
-
-    @media (max-width: 768px) {
-      border-radius: 2px;
-      padding: 0 css-clamp(5px, 14px);
     }
 
     &:hover {

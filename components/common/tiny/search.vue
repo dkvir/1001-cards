@@ -213,13 +213,19 @@ onClickOutside(target, (event) => {
   }
 
   .input-parent {
+    --input-margin: #{css-clamp(5px, 16px)};
+
     width: 100%;
+    margin-left: var(--input-margin);
+
+    @include mq(max-width 500px) {
+      --input-margin: 16px;
+    }
     .search-input {
       font-size: css-clamp(16px, 20px);
       color: var(--color-evex-green);
       font-family: var(--font-ping-regular);
-      margin-left: css-clamp(8px, 16px);
-      width: calc(100% - var(--icon-sizes));
+      width: calc(100% - var(--icon-sizes) - var(--input-margin));
       @include mq(max-width 1024px) {
         font-size: css-clamp-vw(14px, 16px, 1024);
       }
