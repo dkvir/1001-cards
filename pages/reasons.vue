@@ -27,8 +27,6 @@
       v-if="hoveredImageLink"
     >
       <img :src="hoveredImageLink" />
-      >
-      <img :src="hoveredImageLink" />
     </div>
   </div>
 </template>
@@ -199,6 +197,10 @@ const changeReasonIndex = (index) => {
       0
     );
     @include default-transitions(opacity);
+
+    @include mq(max-width 1024px) {
+      display: none;
+    }
 
     &.hover-image-visible {
       --image-opacity: 1;

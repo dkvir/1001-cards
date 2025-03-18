@@ -65,7 +65,8 @@ onMounted(() => {
   pointer-events: all;
   height: var(--app-header-height);
   transform: translate3d(0, var(--visit-transform-y, 0), 0);
-  transition: transform 0.35s ease-in-out;
+  transition: transform 0.35s ease-in-out,
+    opacity 0.35s cubic-bezier(0.33, 1, 0.68, 1);
 
   @include mq(max-width 425px) {
     position: absolute;
@@ -81,7 +82,6 @@ onMounted(() => {
     opacity: var(--visit-opacity, 0);
     pointer-events: none;
     padding: 3px;
-    @include default-transitions(opacity);
   }
 
   @media (max-width: 600px) {
