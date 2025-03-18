@@ -502,7 +502,7 @@ export const useCardsGallery = class App {
     gsap.to(this.camera.position, {
       x: 0,
       y: 0,
-      z: 50,
+      z: window.innerWidth > 768 ? 50 : window.innerWidth > 540 ? 70 : 100,
       duration: 1,
       ease: "power2.inOut",
       onUpdate: () => {

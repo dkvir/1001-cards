@@ -48,8 +48,8 @@ const getCardId = (cardIndex) => {
   @include mq(max-width 500px) {
     position: relative;
     flex-direction: column;
-    align-items: baseline;
-    padding: 22px 0;
+    align-items: flex-start;
+    padding: 22px var(--page-offset-padding);
   }
 
   .number {
@@ -79,13 +79,14 @@ const getCardId = (cardIndex) => {
     color: var(--color-evex-green);
 
     @include mq(max-width 768px) {
-      width: css-clamp-vw(283px, 500px, 768);
-      margin-left: css-clamp-vw(0px, 40px, 768);
-      margin-right: 20px;
+      margin-left: css-clamp-vw(10px, 40px, 768);
+      width: 60%;
     }
 
     @include mq(max-width 500px) {
-      width: 283px;
+      margin-top: 12px;
+      width: 100%;
+      margin-left: 0;
     }
   }
 }

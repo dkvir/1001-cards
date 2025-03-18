@@ -64,8 +64,9 @@ onMounted(() => {
   padding: 5px;
   pointer-events: all;
   height: var(--app-header-height);
-  transform: translate3d(var(--visit-transform-x, 0), 0, 0);
-  @include default-transitions(transform);
+  transform: translate3d(0, var(--visit-transform-y, 0), 0);
+  transition: transform 0.35s ease-in-out;
+
   @include mq(max-width 425px) {
     position: absolute;
     left: var(--page-offset-padding);
@@ -73,10 +74,10 @@ onMounted(() => {
   }
 
   &.transform-visit {
-    --visit-transform-x: -200%;
+    --visit-transform-y: calc(-100% - 8px);
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1024px) and (min-width: 426px) {
     opacity: var(--visit-opacity, 0);
     pointer-events: none;
     padding: 3px;

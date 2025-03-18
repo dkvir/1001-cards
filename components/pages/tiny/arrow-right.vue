@@ -13,10 +13,11 @@
   --arrow-box-size: 40px;
 
   @include mq(max-width 500px) {
-    position: absolute;
-    inset: 0;
-    top: 28px;
     --arrow-box-size: #{css-clamp-vw(28px, 40px, 500)};
+
+    position: absolute;
+    right: var(--page-offset-padding);
+    top: 22px;
   }
 
   margin-left: auto;

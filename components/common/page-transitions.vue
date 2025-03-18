@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['page-transition flex-center', { 'is-active': pageLink.loading }]"
+    :class="['page-transition flex-center', { 'is-active': pageLink.loadings }]"
   >
     <nuxt-icon name="1001-reasons" class="reasons-icon flex-center" filled />
   </div>
@@ -74,7 +74,7 @@ watch(
   }
   :deep(.reasons-icon) {
     svg {
-      height: 352px;
+      height: css-clamp(120px, 352px);
       width: auto;
       --numbers-fill: var(--color-white);
     }

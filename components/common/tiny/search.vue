@@ -109,13 +109,16 @@ const unfocus = () => {
 
 const openMobileSearch = () => {
   if (window.innerWidth <= 425) {
-    openSearchMobile.value = !openSearchMobile.value;
+    openSearchMobile.value = true;
     emit("transformVisit", openSearchMobile.value);
   }
 };
 
 onClickOutside(target, (event) => {
-  openMobileSearch();
+  if (window.innerWidth <= 425) {
+    openSearchMobile.value = false;
+    emit("transformVisit", openSearchMobile.value);
+  }
 });
 </script>
 
@@ -133,7 +136,7 @@ onClickOutside(target, (event) => {
   opacity: var(--search-opacity, 0);
   pointer-events: all;
   overflow: hidden;
-  @include default-transitions(width);
+  transition: width 0.45s ease-in-out;
 
   @include mq(max-width 768px) {
     width: var(--search-width, 200px);
