@@ -77,6 +77,9 @@ const clickShareMessenger = () => {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   height: var(--app-header-height);
+  @include mq(max-width 540px) {
+    width: calc(100% - 2 * var(--page-offset-padding));
+  }
   .share {
     height: 100%;
     padding: 0 css-clamp(16px, 20px);
@@ -97,7 +100,7 @@ const clickShareMessenger = () => {
     }
 
     @media (max-width: 540px) {
-      width: min-content;
+      width: 50%;
     }
 
     &.is-invisible {

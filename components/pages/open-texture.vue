@@ -133,9 +133,15 @@ const closeTexture = () => {
   pointer-events: none;
   @include default-transitions(opacity);
   z-index: 2;
+
+  @media (max-width: 540px) {
+    padding: var(--page-offset-padding);
+  }
+
   &.is-active {
     --component-opacity: 1;
     --background-opacity: 0.82;
+
     pointer-events: all;
   }
   .image {
@@ -151,14 +157,14 @@ const closeTexture = () => {
     }
 
     @media (max-width: 540px) {
-      width: css-clamp-vw(287px, 450px, 540);
-      height: css-clamp-vw(400px, 630px, 540);
+      width: 100%;
+      height: min-content;
+      background-color: transparent;
     }
 
     .img {
       @include size(100%);
       object-fit: cover;
-      border-radius: inherit;
     }
   }
   .close {

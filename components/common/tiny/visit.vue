@@ -68,7 +68,7 @@ onMounted(() => {
   transition: transform 0.35s ease-in-out,
     opacity 0.35s cubic-bezier(0.33, 1, 0.68, 1);
 
-  @include mq(max-width 425px) {
+  @include mq(max-width 500px) {
     position: absolute;
     left: var(--page-offset-padding);
     bottom: 0;
@@ -139,7 +139,7 @@ onMounted(() => {
     }
 
     @media (max-width: 1024px) {
-      font-size: css-clamp-vw(13px, 16px, 1024);
+      font-size: css-clamp-vw(14px, 16px, 1024);
     }
 
     @media (max-width: 768px) {
@@ -161,7 +161,7 @@ onMounted(() => {
     color: var(--color-white);
 
     @media (max-width: 1024px) {
-      font-size: css-clamp-vw(13px, 16px, 1024);
+      font-size: css-clamp-vw(14px, 16px, 1024);
     }
 
     @media (max-width: 768px) {

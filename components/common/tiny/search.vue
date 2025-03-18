@@ -20,7 +20,7 @@
     <div class="input-parent flex-center justify-between">
       <input
         v-model="searchQuery"
-        class="search-input"
+        class="search-input uppercase"
         type="number"
         :min="1"
         :max="1001"
@@ -75,6 +75,11 @@ watch(
   (curr, prev) => {
     searchVisibility.value = curr == "/reasons";
 
+    if (window.innerWidth <= 500) {
+      openSearchMobile.value = false;
+      emit("transformVisit", openSearchMobile.value);
+    }
+
     if (curr == "/" && prev == "/reasons") {
       searchQuery.value = null;
       searchStore.changeSearchValue(searchQuery.value);
@@ -93,7 +98,7 @@ const restrictInput = () => {
 
 const handleSearch = () => {
   searchStore.changeSearchValue(searchQuery.value);
-  if (window.innerWidth <= 425) {
+  if (window.innerWidth <= 500) {
     openSearchMobile.value = !openSearchMobile.value;
     emit("transformVisit", openSearchMobile.value);
   }
@@ -108,14 +113,14 @@ const unfocus = () => {
 };
 
 const openMobileSearch = () => {
-  if (window.innerWidth <= 425) {
+  if (window.innerWidth <= 500) {
     openSearchMobile.value = true;
     emit("transformVisit", openSearchMobile.value);
   }
 };
 
 onClickOutside(target, (event) => {
-  if (window.innerWidth <= 425) {
+  if (window.innerWidth <= 500) {
     openSearchMobile.value = false;
     emit("transformVisit", openSearchMobile.value);
   }
@@ -126,11 +131,12 @@ onClickOutside(target, (event) => {
 .search {
   --icon-padding: 5px;
   --icon-sizes: calc(var(--app-header-height) - 2 * var(--icon-padding));
+  --border-radius: 8px;
 
   position: relative;
   width: var(--search-width, 320px);
   height: 100%;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: var(--icon-padding);
   padding-left: calc(css-clamp(12px, 16px) + var(--icon-sizes));
   opacity: var(--search-opacity, 0);
@@ -139,17 +145,19 @@ onClickOutside(target, (event) => {
   transition: width 0.45s ease-in-out;
 
   @include mq(max-width 768px) {
-    width: var(--search-width, 200px);
+    --icon-padding: 3px;
+
+    width: var(--search-width, 250px);
   }
 
-  @include mq(max-width 425px) {
+  @include mq(max-width 500px) {
     --search-width: var(--app-header-height);
+    --border-radius: 4px;
 
     position: absolute;
     right: var(--page-offset-padding);
     bottom: 0;
     padding-left: calc(var(--icon-sizes));
-    border-radius: 4px;
   }
 
   &.is-visible {
@@ -187,9 +195,9 @@ onClickOutside(target, (event) => {
     margin-left: css-clamp(12px, 16px);
     @include size(var(--icon-sizes));
     background-color: var(--search-icon-bg, transparent);
-    border-radius: 4px;
+    border-radius: var(--border-radius);
 
-    @include mq(max-width 425px) {
+    @include mq(max-width 500px) {
       --search-icon-bg: var(--color-eleonor);
       margin-left: var(--icon-padding);
     }
@@ -213,7 +221,7 @@ onClickOutside(target, (event) => {
       margin-left: css-clamp(8px, 16px);
       width: calc(100% - var(--icon-sizes));
       @include mq(max-width 1024px) {
-        font-size: css-clamp-vw(12px, 16px, 1024);
+        font-size: css-clamp-vw(14px, 16px, 1024);
       }
 
       &:focus::placeholder {
@@ -230,7 +238,7 @@ onClickOutside(target, (event) => {
     :deep(.search-arrow) {
       cursor: pointer;
       background-color: var(--hover-color, var(--color-eleonor));
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       @include size(var(--icon-sizes));
       @include default-transitions(background-color);
 
