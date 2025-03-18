@@ -198,7 +198,7 @@ onClickOutside(target, (event) => {
       svg {
         @include size(css-clamp(18px, 24px));
         @include mq(max-width 768px) {
-          @include size(css-clamp-vw(14px, 18px, 768));
+          @include size(css-clamp-vw(18px, 18px, 768));
         }
       }
     }
