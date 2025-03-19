@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['page-transition flex-center', { 'is-active': pageLink.loadings }]"
+    :class="['page-transition flex-center', { 'is-active': pageLink.loading }]"
   >
     <nuxt-icon name="1001-reasons" class="reasons-icon flex-center" filled />
   </div>
