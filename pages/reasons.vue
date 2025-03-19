@@ -13,8 +13,8 @@
       <li
         v-for="(item, index) in searchStore.getReasons"
         :key="index"
-        @click="changeReasonIndex(index)"
-        @mouseenter="(event) => handleMouseEnter(index, event)"
+        @click="changeReasonIndex(item.cardIndex)"
+        @mouseenter="(event) => handleMouseEnter(item.cardIndex, event)"
         @mouseleave="(event) => handleMouseLeave(event)"
         class="item"
       >
@@ -62,8 +62,8 @@ const handleMouseMove = (event) => {
 };
 
 const handleMouseEnter = (index, e) => {
-  hoveredItemIndex.value = index;
-  hoveredImageLink.value = reasonsArray[index]?.image;
+  hoveredItemIndex.value = index - 1;
+  hoveredImageLink.value = `/images/1001-back/${index}.webp`;
   useReasonsHover.mouseEnter(e);
 };
 
@@ -121,7 +121,7 @@ function gsapTransforms() {
 }
 
 const changeReasonIndex = (index) => {
-  textureStore.changeReasonIndex(index + 1);
+  textureStore.changeReasonIndex(index);
 };
 </script>
 
